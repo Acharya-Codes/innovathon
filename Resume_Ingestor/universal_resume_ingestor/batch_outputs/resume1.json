@@ -1,0 +1,24 @@
+{
+  "skills": [
+    "Python",
+    "Java",
+    "HTML/CSS",
+    "SQL",
+    "Git",
+    "GitHub",
+    "VS Code",
+    "Linux",
+    "Agile",
+    "Scrum fundamentals"
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Science in Computer Science",
+      "institution": "State University",
+      "year": "May 2026",
+      "cgpa": "3.8/4.0"
+    }
+  ],
+  "experience": [],
+  "projects": []
+}

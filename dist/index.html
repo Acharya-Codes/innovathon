@@ -1,0 +1,1215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d0830">
+  <meta name="description" content="Nectarline is an AI-powered resume-to-internship curation and matching studio.">
+  <title>Nectarline — Resume & Curation Studio</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://d8j0ntlcm91z4.cloudfront.net" crossorigin>
+  <link rel="preconnect" href="https://images.higgs.ai" crossorigin>
+  <style>
+    @font-face{font-family:InterTight;src:url("https://fonts.gstatic.com/s/intertight/v9/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2") format("woff2");font-style:normal;font-weight:300 600;font-display:swap}
+    @font-face{font-family:InstrumentSerif;src:url("https://fonts.gstatic.com/s/instrumentserif/v5/jizHRFtNs2ka5fXjeivQ4LroWlx-6zAjjH7M.woff2") format("woff2");font-style:italic;font-weight:400;font-display:swap}
+    @font-face{font-family:FiraCode;src:url("https://fonts.gstatic.com/s/firacode/v27/uU9eCBsR6Z2vfE9aq3bL0fxyUs4tcw4W_D1sJVD7Ng.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap}
+    :root{--ink:#f4f2ff;--ink-2:rgba(236,232,255,.72);--ink-3:rgba(220,214,255,.5);--peri:#6f78ff;--peri-2:#8d94ff;--navy:#0d0830;--line:rgba(196,178,255,.15);--mint:#9ce7cb;--amber:#f2c98b;--rose:#f0a2b3;--u:1;--serif:"InstrumentSerif",Georgia,serif;--sans:"InterTight",Inter,system-ui,sans-serif;--mono:"FiraCode",monospace}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:92px;overflow-x:clip}
+    body{margin:0;min-width:320px;background:var(--navy);color:var(--ink);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    button,input{font:inherit}
+    button{color:inherit}
+    a{color:inherit;text-decoration:none}
+    ::-moz-selection{background:rgba(141,148,255,.38);color:#fff}
+    ::selection{background:rgba(141,148,255,.38);color:#fff}
+    :focus-visible{outline:2px solid #aeb2ff;outline-offset:3px}
+    .scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#0d0830}
+    .scene-layer{position:absolute;inset:0}
+    .day-plate{background:#37295c url("https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261104_151305_25ef1f45-0886-491c-a7a8-81e296402d5a.png&w=2400&q=85") center 40%/cover no-repeat;opacity:.76;transform:scale(1.025)}
+    .day-plate:after,.night-plate:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,8,48,.43),rgba(13,8,48,.04) 70%),linear-gradient(180deg,rgba(13,8,48,.32),transparent 25%,rgba(13,8,48,.65))}
+    #pondfx{position:absolute;inset:0;width:100%;height:100%;opacity:.68;mix-blend-mode:screen;transition:opacity .4s}
+    .night-wash{background:linear-gradient(180deg,#160c40,#0b0626);opacity:0}
+    .night-plate{background:#120c32 url("https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261104_151304_3b7ab857-b4c2-4f5a-8d7f-e1ec429185a5.png&w=2400&q=85") center/cover no-repeat;opacity:0}
+    .night-plate:after{background:linear-gradient(180deg,rgba(13,8,48,.22),rgba(13,8,48,.76))}
+    .pond-video{position:fixed;width:2px;height:2px;opacity:0;pointer-events:none}
+    .scene-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 68% 32%,transparent 10%,rgba(10,6,36,.12) 65%,rgba(9,5,32,.48));}
+    .site{position:relative;z-index:2}
+    .u-wrap{width:min(calc(100% - 64px * var(--u)),1248px * var(--u));margin-inline:auto}
+    .topbar{position:fixed;z-index:10;inset:0 0 auto;height:calc(76px * var(--u));border-bottom:1px solid rgba(220,214,255,.09);background:rgba(13,8,48,.42);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    .topbar-inner{height:100%;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:inline-flex;align-items:center;gap:11px;font-size:17px;font-weight:600;letter-spacing:-.055em}
+    .brand-mark{position:relative;width:28px;height:28px;display:grid;place-items:center;border:1px solid rgba(204,194,255,.34);border-radius:9px;background:linear-gradient(145deg,rgba(186,174,255,.22),rgba(93,81,172,.08))}
+    .brand-mark svg{width:18px;height:18px}
+    .brand-name span{color:#aab0ff}
+    .brand-divider{width:1px;height:20px;margin-inline:2px;background:var(--line)}
+    .brand-caption{color:var(--ink-3);font-size:11px;font-weight:400;letter-spacing:.01em}
+    .nav{display:flex;align-items:center;gap:28px;color:rgba(236,232,255,.7);font-size:12px}
+    .nav a{transition:color .18s ease}
+    .nav a:hover{color:#fff}
+    .nav-cta{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(193,186,255,.34);border-radius:999px;background:rgba(121,118,255,.18);padding:10px 15px;color:#fff;font-size:11px;font-weight:500;transition:background .18s,transform .18s}
+    .nav-cta:hover{background:rgba(121,118,255,.31);transform:translateY(-1px)}
+    .nav-cta svg{width:13px;height:13px}
+    .menu-button{display:none;width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06)}
+    main{padding-top:calc(76px * var(--u))}
+    section{position:relative}
+    .hero{min-height:790px;min-height:min(940px,100svh);display:flex;align-items:center;padding:calc(126px * var(--u)) 0 calc(94px * var(--u))}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.82fr);align-items:center;gap:7%}
+    .eyebrow{display:flex;align-items:center;gap:10px;color:#c5c6ff;font-size:10px;font-weight:500;letter-spacing:.19em;text-transform:uppercase}
+    .eyebrow:before{content:"";width:22px;height:1px;background:var(--peri-2)}
+    h1,h2,h3,p{margin-top:0}
+    h1{max-width:740px;margin:22px 0 20px;font-size:clamp(54px,7vw,100px);font-weight:400;line-height:.96;letter-spacing:-.075em}
+    h1 em,h2 em{font-family:var(--serif);font-weight:400;letter-spacing:-.035em;color:#d0c8ff}
+    .hero-subline{margin:0 0 16px;color:#d2ccff;font-size:12px;font-weight:500;letter-spacing:.015em}
+    .hero-copy{max-width:440px;margin-bottom:28px;color:var(--ink-2);font-size:15px;line-height:1.75}
+    .hero-copy strong{color:#fff;font-weight:500}
+    .upload-card{max-width:535px;border:1px solid rgba(220,214,255,.19);border-radius:19px;background:linear-gradient(145deg,rgba(31,24,75,.7),rgba(16,12,52,.59));padding:20px;box-shadow:0 18px 70px rgba(8,4,36,.23);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+    .upload-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .upload-label{display:flex;align-items:center;gap:9px;color:#f4f2ff;font-size:12px;font-weight:500}
+    .upload-label svg{width:15px;height:15px;color:#aab0ff}
+    .secure-label{display:flex;align-items:center;gap:6px;color:var(--ink-3);font-size:10px}
+    .secure-label svg{width:12px;height:12px;color:#9ce7cb}
+    .dropzone{min-height:150px;display:grid;place-items:center;border:1px dashed rgba(196,178,255,.35);border-radius:13px;background:rgba(255,255,255,.025);text-align:center;cursor:pointer;transition:background .2s,border-color .2s,transform .2s;position:relative;overflow:hidden}
+    .dropzone:hover,.dropzone.is-dragging{border-color:rgba(172,174,255,.88);background:rgba(123,123,255,.09)}
+    .dropzone.is-dragging{transform:scale(1.008)}
+    .dropzone:after{content:"";position:absolute;width:24px;height:24px;border-radius:50%;border:1px solid rgba(195,190,255,.8);transform:scale(0);opacity:0;pointer-events:none}
+    .dropzone.is-dragging:after{animation:ripple .65s ease-out}
+    @keyframes ripple{0%{transform:scale(.3);opacity:.7}100%{transform:scale(14);opacity:0}}
+    .drop-content{padding:18px}
+    .upload-symbol{width:38px;height:38px;margin:0 auto 11px;display:grid;place-items:center;border:1px solid rgba(203,195,255,.2);border-radius:12px;background:rgba(133,128,255,.13);color:#c3c4ff}
+    .upload-symbol svg{width:18px;height:18px}
+    .drop-title{font-size:12px;font-weight:500}
+    .drop-caption{margin-top:5px;color:var(--ink-3);font-size:10px}
+    .drop-caption span{color:#c3c4ff}
+    .file-meta{display:none;align-items:center;gap:12px;padding:18px;text-align:left;width:100%}
+    .file-tile{width:42px;height:48px;display:grid;place-items:center;flex:none;border:1px solid rgba(196,178,255,.24);border-radius:9px;background:rgba(123,123,255,.12);color:#d5d1ff}
+    .file-tile svg{width:18px;height:18px}
+    .file-info{flex:1;min-width:0}
+    .file-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:500}
+    .file-detail{margin-top:6px;color:var(--ink-3);font-family:var(--mono);font-size:9px}
+    .file-remove{width:29px;height:29px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.04);color:var(--ink-2);cursor:pointer}
+    .file-remove svg{width:13px;height:13px}
+    .upload-bottom{display:flex;align-items:center;gap:12px;margin-top:12px}
+    .primary-btn{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid rgba(186,184,255,.55);border-radius:11px;background:linear-gradient(135deg,#777cf7,#626be8);padding:0 16px;color:white;font-size:11px;font-weight:600;box-shadow:0 7px 24px rgba(94,89,217,.24);cursor:pointer;transition:transform .18s,filter .18s,opacity .18s}
+    .primary-btn:not(:disabled):hover{transform:translateY(-1px);filter:brightness(1.08)}
+    .primary-btn:disabled{opacity:.48;cursor:not-allowed;box-shadow:none}
+    .primary-btn svg{width:15px;height:15px}
+    .format-note{color:var(--ink-3);font-size:9px;line-height:1.55}
+    .format-note strong{color:var(--ink-2);font-weight:500}
+    .pipeline{display:none;margin-top:14px;border:1px solid rgba(196,178,255,.15);border-radius:12px;background:rgba(12,9,43,.48);padding:13px 15px}
+    .pipeline.active{display:block;animation:fadeup .25s ease both}
+    @keyframes fadeup{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+    .pipeline-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .pipeline-title{font-size:10px;font-weight:500}
+    .pipeline-count{font-family:var(--mono);font-size:9px;color:#c5c6ff}
+    .pipeline-track{height:3px;overflow:hidden;border-radius:9px;background:rgba(255,255,255,.12)}
+    .pipeline-fill{height:100%;width:0;background:linear-gradient(90deg,#737bff,#b3b6ff);transition:width .2s ease}
+    .pipeline-list{display:grid;gap:8px;margin-top:11px}
+    .pipeline-step{display:flex;gap:9px;align-items:flex-start;color:var(--ink-3);font-size:10px;line-height:1.4}
+    .pipeline-dot{width:14px;height:14px;display:grid;place-items:center;flex:none;border:1px solid rgba(220,214,255,.22);border-radius:50%;font-family:var(--mono);font-size:8px}
+    .pipeline-step.done{color:#b6efd9}.pipeline-step.current{color:#fff}
+    .pipeline-step.done .pipeline-dot{border-color:rgba(156,231,203,.5);background:rgba(66,160,119,.18);color:#a5f0d2}
+    .pipeline-step.current .pipeline-dot{border-color:#969cff;background:rgba(111,120,255,.26);color:#fff}
+    .hero-visual{min-height:465px;position:relative;display:grid;place-items:center}
+    .visual-orbit{position:absolute;width:min(34vw,440px);aspect-ratio:1;border:1px solid rgba(221,215,255,.14);border-radius:50%;box-shadow:0 0 0 27px rgba(221,215,255,.025),0 0 0 65px rgba(221,215,255,.018)}
+    .visual-orbit:before,.visual-orbit:after{content:"";position:absolute;border:1px solid rgba(221,215,255,.11);border-radius:50%;inset:12% -11%;transform:rotate(-25deg)}
+    .visual-orbit:after{inset:-10% 12%;transform:rotate(35deg)}
+    .visual-core{position:relative;width:100%;height:100%;min-height:400px}
+    .visual-caption{position:absolute;left:2%;bottom:8%;display:flex;align-items:center;gap:9px;color:rgba(236,232,255,.66);font-family:var(--mono);font-size:9px;letter-spacing:.04em}
+    .live-pip{width:7px;height:7px;border-radius:50%;background:#a2e8cc;box-shadow:0 0 12px rgba(162,232,204,.65)}
+    .hero-index{position:absolute;right:2%;top:12%;color:rgba(236,232,255,.44);font-family:var(--mono);font-size:9px;writing-mode:vertical-rl;letter-spacing:.18em}
+    .scroll-cue{position:absolute;bottom:30px;left:50%;display:flex;align-items:center;gap:10px;transform:translateX(-50%);color:rgba(236,232,255,.5);font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase}
+    .scroll-line{width:32px;height:1px;background:rgba(236,232,255,.38)}
+    .section-shell{padding:126px 0;scroll-margin-top:calc(72px * var(--u))}
+    .section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:25px;margin-bottom:42px}
+    .section-heading h2{max-width:760px;margin:16px 0 0;font-size:clamp(38px,5.6vw,72px);font-weight:400;line-height:1.03;letter-spacing:-.066em}
+    .section-heading h2 em{color:#cbc5ff}
+    .section-lede{max-width:310px;margin:0;color:var(--ink-2);font-size:13px;line-height:1.75}
+    .section-kicker{color:#b5baff;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+    .studio-shell{border:1px solid rgba(220,214,255,.18);border-radius:22px;background:linear-gradient(150deg,rgba(28,21,71,.77),rgba(13,10,42,.75));box-shadow:0 25px 100px rgba(8,4,36,.26);backdrop-filter:blur(19px);-webkit-backdrop-filter:blur(19px);overflow:hidden;scroll-margin-top:calc(86px * var(--u))}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .stat-card{min-height:98px;border:1px solid rgba(220,214,255,.14);border-radius:14px;background:rgba(19,15,56,.64);padding:17px 18px}
+    .stat-label{color:var(--ink-3);font-size:10px}
+    .stat-value{margin-top:12px;font-size:25px;font-weight:400;letter-spacing:-.05em}
+    .stat-foot{margin-top:3px;color:rgba(220,214,255,.4);font-size:9px}
+    .stat-value .unit{margin-left:2px;color:var(--ink-2);font-size:13px}
+    .studio-top{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(220,214,255,.11);padding:15px 20px}
+    .candidate{display:flex;align-items:center;gap:11px}
+    .avatar{width:35px;height:35px;display:grid;place-items:center;border:1px solid rgba(198,190,255,.3);border-radius:11px;background:linear-gradient(145deg,rgba(158,156,255,.32),rgba(74,65,136,.24));color:#ebe8ff;font-size:11px;font-weight:600}
+    .candidate-name{font-size:11px;font-weight:500}
+    .candidate-role{margin-top:3px;color:var(--ink-3);font-size:9px}
+    .status-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(156,231,203,.18);border-radius:999px;background:rgba(62,150,116,.12);padding:7px 10px;color:#b1efd6;font-size:9px}
+    .status-dot{width:5px;height:5px;border-radius:50%;background:#9ce7cb}
+    .studio-layout{display:grid;grid-template-columns:185px 1fr}
+    .sidebar{border-right:1px solid rgba(220,214,255,.1);padding:20px 12px}
+    .sidebar-label{padding:0 10px 10px;color:rgba(220,214,255,.36);font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase}
+    .side-link{width:100%;display:flex;align-items:center;gap:10px;border:0;border-radius:9px;background:transparent;padding:10px;color:rgba(236,232,255,.57);text-align:left;font-size:10px;cursor:pointer;transition:background .18s,color .18s}
+    .side-link svg{width:14px;height:14px;opacity:.75}
+    .side-link:hover,.side-link.active{background:rgba(126,127,255,.14);color:#fff}
+    .side-count{margin-left:auto;color:rgba(220,214,255,.43);font-family:var(--mono);font-size:8px}
+    .studio-main{min-width:0;padding:23px}
+    .main-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}
+    .main-title{font-size:13px;font-weight:500}
+    .small-meta{color:var(--ink-3);font-family:var(--mono);font-size:8px}
+    .skills-box{border:1px solid rgba(220,214,255,.11);border-radius:13px;background:rgba(12,9,43,.34);padding:15px}
+    .box-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+    .box-heading strong{font-size:10px;font-weight:500}
+    .box-heading span{color:var(--ink-3);font-family:var(--mono);font-size:8px}
+    .skill-list{display:flex;flex-wrap:wrap;gap:7px}
+    .skill-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(196,178,255,.15);border-radius:999px;background:rgba(129,123,235,.1);padding:6px 9px;color:#dad6ff;font-size:9px;line-height:1}
+    .skill-chip:before{content:"";width:5px;height:5px;border-radius:50%;background:#9c9fff}
+    .skill-chip.matched{border-color:rgba(156,231,203,.2);background:rgba(58,145,111,.12);color:#b5eed7}
+    .skill-chip.matched:before{background:#9ce7cb}
+    .skill-chip.gap{border-color:rgba(242,201,139,.23);background:rgba(176,117,43,.13);color:#f2d5a5}
+    .skill-chip.gap:before{background:#efbb71}
+    .placeholder{color:var(--ink-3);font-size:10px}
+    .table-wrap{overflow:auto;border:1px solid rgba(220,214,255,.11);border-radius:13px;background:rgba(12,9,43,.28)}
+    .matches-table{width:100%;border-collapse:collapse;min-width:610px}
+    .matches-table th{border-bottom:1px solid rgba(220,214,255,.1);padding:11px 12px;color:rgba(220,214,255,.42);font-family:var(--mono);font-size:8px;font-weight:400;letter-spacing:.06em;text-align:left;text-transform:uppercase}
+    .matches-table td{border-bottom:1px solid rgba(220,214,255,.075);padding:12px;color:rgba(236,232,255,.72);font-size:9px}
+    .matches-table tr:last-child td{border-bottom:0}
+    .match-row{cursor:pointer;transition:background .16s}
+    .match-row:hover,.match-row.expanded{background:rgba(131,126,255,.08)}
+    .job-title{color:#fff;font-size:10px;font-weight:500}
+    .job-company{margin-top:3px;color:var(--ink-3);font-size:8px}
+    .score-cell{color:#a9efcf!important;font-family:var(--mono);font-size:10px!important}
+    .match-status{display:inline-flex;border:1px solid rgba(156,231,203,.18);border-radius:999px;background:rgba(62,150,116,.1);padding:5px 8px;color:#a9e6ca;font-size:8px}
+    .detail-row{display:none;background:rgba(8,6,34,.34)}
+    .detail-row.open{display:table-row}
+    .detail-row td{padding:13px 16px 16px 18px;color:var(--ink-2);line-height:1.6}
+    .detail-label{margin-bottom:7px;color:rgba(220,214,255,.42);font-family:var(--mono);font-size:8px;text-transform:uppercase}
+    .dashboard-lower{display:grid;grid-template-columns:1fr .95fr;gap:13px;margin-top:13px}
+    .chart-card,.notes-card{border:1px solid rgba(220,214,255,.11);border-radius:13px;background:rgba(12,9,43,.32);padding:15px}
+    .chart-card svg{width:100%;height:auto;overflow:visible}
+    .chart-grid{stroke:rgba(220,214,255,.1);stroke-width:1}
+    .chart-area{fill:url(#chartFill)}
+    .chart-line{fill:none;stroke:#9b9eff;stroke-width:2}
+    .chart-point{fill:#c4c5ff;stroke:#413f85;stroke-width:2}
+    .chart-label{fill:rgba(220,214,255,.54);font:8px var(--mono)}
+    .notes-copy{color:var(--ink-2);font-size:10px;line-height:1.7}
+    .notes-callout{margin-top:11px;border-left:2px solid #9298ff;padding:3px 0 3px 10px;color:#d5d2ff;font-size:9px;line-height:1.6}
+    .packs-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);gap:18px;align-items:stretch}
+    .glass-card{border:1px solid rgba(220,214,255,.16);border-radius:19px;background:linear-gradient(145deg,rgba(31,24,75,.72),rgba(15,11,48,.72));box-shadow:0 20px 60px rgba(8,4,36,.16);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+    .critique-card{padding:25px}
+    .card-label{display:flex;align-items:center;gap:9px;color:#d4d1ff;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+    .card-label svg{width:15px;height:15px;color:#afb2ff}
+    .critique-card h3{margin:20px 0 12px;font-size:clamp(30px,4vw,47px);font-weight:400;line-height:1.04;letter-spacing:-.06em}
+    .critique-card h3 em{font-family:var(--serif);color:#d0c8ff}
+    .critique-body{margin:0;color:var(--ink-2);font-size:12px;line-height:1.85}
+    .gap-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:17px}
+    .gap-chip{border:1px solid rgba(242,201,139,.22);border-radius:999px;background:rgba(176,117,43,.12);padding:7px 10px;color:#f0d29e;font-size:9px}
+    .recruiter-note{display:flex;gap:12px;margin-top:20px;border:1px solid rgba(196,178,255,.13);border-radius:12px;background:rgba(15,11,49,.42);padding:14px}
+    .note-mark{width:26px;height:26px;display:grid;place-items:center;flex:none;border-radius:8px;background:rgba(125,124,255,.14);color:#c3c4ff}
+    .note-mark svg{width:13px;height:13px}
+    .note-text{color:var(--ink-2);font-size:10px;line-height:1.7}
+    .roadmap-card{margin-top:20px;border-top:1px solid rgba(220,214,255,.12);padding-top:20px}
+    .roadmap-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}
+    .roadmap-title{font-size:11px;font-weight:500}
+    .total-hours{color:var(--ink-3);font-family:var(--mono);font-size:9px}
+    .roadmap-list{position:relative;display:grid;gap:0}
+    .roadmap-list:before{content:"";position:absolute;left:11px;top:11px;bottom:18px;width:1px;background:linear-gradient(rgba(141,148,255,.55),rgba(196,178,255,.1))}
+    .roadmap-item{position:relative;display:grid;grid-template-columns:23px 1fr auto;gap:10px;padding-bottom:18px}
+    .roadmap-item:last-child{padding-bottom:0}
+    .roadmap-node{z-index:1;width:23px;height:23px;display:grid;place-items:center;border:1px solid rgba(177,178,255,.43);border-radius:50%;background:#1b164c;color:#c7c8ff;font-family:var(--mono);font-size:8px}
+    .roadmap-topic{padding-top:3px;font-size:10px;font-weight:500}
+    .roadmap-resource{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+    .resource-tag{border:1px solid rgba(196,178,255,.15);border-radius:5px;background:rgba(129,123,235,.1);padding:4px 6px;color:#cbc8ff;font-family:var(--mono);font-size:8px}
+    .resource-tag.project{border-color:rgba(156,231,203,.2);background:rgba(58,145,111,.11);color:#aee8ce}
+    .resource-tag.docs{border-color:rgba(143,179,255,.19);background:rgba(72,113,190,.11);color:#b6ccff}
+    .roadmap-hours{padding-top:4px;color:var(--ink-3);font-family:var(--mono);font-size:8px;white-space:nowrap}
+    .json-card{overflow:hidden;display:flex;flex-direction:column}
+    .code-top{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(220,214,255,.11);padding:14px 17px}
+    .code-title{display:flex;align-items:center;gap:9px;color:rgba(236,232,255,.72);font-size:10px}
+    .code-title svg{width:14px;height:14px;color:#b4b8ff}
+    .code-status{display:flex;align-items:center;gap:6px;color:#a9e6ca;font-family:var(--mono);font-size:8px}
+    .code-window{flex:1;min-height:325px;background:rgba(9,7,34,.34);padding:20px 20px 24px;overflow:auto}
+    .code-window pre{margin:0;color:#d7d4ee;font-family:var(--mono);font-size:10px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere}
+    .code-window .json-key{color:#aeb3ff}
+    .code-window .json-string{color:#a9e6ca}
+    .code-window .json-number{color:#f0d29e}
+    .code-foot{border-top:1px solid rgba(220,214,255,.1);padding:11px 17px;color:rgba(220,214,255,.43);font-family:var(--mono);font-size:8px}
+    .process-section{padding:105px 0 125px}
+    .process-band{border-top:1px solid rgba(220,214,255,.14);border-bottom:1px solid rgba(220,214,255,.14);padding:39px 0}
+    .process-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+    .process-item{position:relative;padding:0 30px}
+    .process-item:first-child{padding-left:0}
+    .process-item:not(:last-child):after{content:"";position:absolute;right:0;top:3px;width:1px;height:100px;background:rgba(220,214,255,.13)}
+    .process-num{color:#aeb3ff;font-family:var(--mono);font-size:9px}
+    .process-title{margin:16px 0 8px;font-size:17px;font-weight:400;letter-spacing:-.03em}
+    .process-copy{max-width:260px;margin:0;color:var(--ink-3);font-size:10px;line-height:1.75}
+    .usecase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+    .usecase-card{min-height:220px;position:relative;overflow:hidden;border:1px solid rgba(220,214,255,.15);border-radius:17px;background:linear-gradient(145deg,rgba(30,23,72,.72),rgba(13,10,42,.69));padding:22px;backdrop-filter:blur(13px);transition:transform .2s,border-color .2s}
+    .usecase-card:hover{transform:translateY(-3px);border-color:rgba(173,174,255,.35)}
+    .usecase-icon{width:35px;height:35px;display:grid;place-items:center;border:1px solid rgba(196,178,255,.2);border-radius:11px;background:rgba(128,126,255,.12);color:#c2c3ff}
+    .usecase-icon svg{width:16px;height:16px}
+    .usecase-title{margin:23px 0 8px;font-size:15px;font-weight:500}
+    .usecase-copy{max-width:300px;margin:0;color:var(--ink-3);font-size:10px;line-height:1.8}
+    .usecase-index{position:absolute;top:23px;right:22px;color:rgba(220,214,255,.28);font-family:var(--mono);font-size:9px}
+    footer{position:relative;min-height:280px;display:flex;align-items:flex-end;padding:70px 0 calc(31px * var(--u))}
+    .footer-top{display:flex;align-items:flex-start;justify-content:space-between;gap:25px;padding-bottom:32px;border-bottom:1px solid rgba(220,214,255,.12)}
+    .footer-brand{max-width:300px}
+    .footer-brand p{margin:13px 0 0;color:var(--ink-3);font-size:10px;line-height:1.7}
+    .footer-links{display:flex;gap:23px;color:var(--ink-3);font-size:10px}
+    .footer-bottom{display:flex;justify-content:space-between;gap:20px;padding-top:16px;color:rgba(220,214,255,.38);font-family:var(--mono);font-size:8px}
+    .error-banner{display:none;margin-top:12px;border:1px solid rgba(240,162,179,.32);border-radius:10px;background:rgba(139,44,68,.16);padding:11px 13px;color:#ffd2dc;font-size:10px;line-height:1.6}
+    .error-banner.visible{display:block}
+    .empty-state{padding:22px 14px;text-align:center;color:var(--ink-3);font-size:10px;line-height:1.7}
+    .empty-state strong{display:block;margin-bottom:5px;color:var(--ink-2);font-size:11px;font-weight:500}
+    .visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(min-width:1440px){:root{--u:1} .hero{min-height:900px}}
+    @media(max-width:900px){
+      .hero-grid{grid-template-columns:1fr .72fr;gap:3%}
+      .hero-visual{min-height:390px}
+      .visual-orbit{width:34vw}
+      .studio-layout{grid-template-columns:155px 1fr}
+      .packs-grid{grid-template-columns:1fr}
+      .json-card{min-height:360px}
+      .section-shell{padding:100px 0}
+    }
+    @media(max-width:680px){
+      html{scroll-padding-top:68px}
+      .u-wrap{width:min(100% - 36px,520px)}
+      .topbar{height:64px}
+      .brand-caption,.brand-divider{display:none}
+      .nav{display:none;position:absolute;top:63px;left:0;right:0;align-items:stretch;gap:0;border-bottom:1px solid var(--line);background:rgba(13,8,48,.95);padding:10px 18px 15px;backdrop-filter:blur(16px)}
+      .nav.open{display:flex;flex-direction:column}
+      .nav a:not(.nav-cta){padding:12px 4px}
+      .nav-cta{margin-top:7px;justify-content:center}
+      .menu-button{display:grid;place-items:center}
+      .menu-button svg{width:17px;height:17px}
+      main{padding-top:64px}
+      .hero{min-height:auto;padding:100px 0 76px;align-items:flex-start}
+      .hero-grid{grid-template-columns:1fr;gap:16px}
+      h1{max-width:560px;margin-top:18px;font-size:clamp(53px,14vw,76px)}
+      .hero-copy{max-width:440px;font-size:13px}
+      .hero-visual{position:absolute;right:-110px;top:95px;width:270px;height:300px;min-height:0;opacity:.45;z-index:-1}
+      .visual-orbit{width:230px}
+      .visual-core{min-height:260px}
+      .visual-caption,.hero-index{display:none}
+      .upload-card{padding:15px}
+      .dropzone{min-height:135px}
+      .upload-bottom{align-items:flex-start;flex-direction:column}
+      .primary-btn{width:100%}
+      .format-note{padding:0 2px}
+      .scroll-cue{bottom:25px}
+      .section-shell{padding:82px 0}
+      .section-heading{display:block;margin-bottom:25px}
+      .section-heading h2{font-size:clamp(39px,10vw,56px)}
+      .section-lede{margin-top:14px;font-size:12px}
+      .stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+      .stat-card{min-height:83px;padding:13px}
+      .stat-value{font-size:22px;margin-top:9px}
+      .studio-shell{border-radius:16px}
+      .studio-top{padding:13px}
+      .studio-layout{grid-template-columns:1fr}
+      .sidebar{display:flex;overflow:auto;gap:3px;border-right:0;border-bottom:1px solid rgba(220,214,255,.1);padding:8px}
+      .sidebar-label{display:none}
+      .side-link{width:auto;flex:none;gap:7px;padding:9px;font-size:9px}
+      .side-link svg{width:12px;height:12px}
+      .side-count{display:none}
+      .studio-main{padding:14px}
+      .dashboard-lower{grid-template-columns:1fr}
+      .section-shell#packs{padding-top:66px}
+      .critique-card{padding:18px}
+      .code-window{min-height:250px;padding:16px}
+      .process-section{padding:60px 0 80px}
+      .process-grid{grid-template-columns:1fr;gap:24px}
+      .process-item,.process-item:first-child{padding:0}
+      .process-item:not(:last-child):after{display:none}
+      .process-title{margin:9px 0 5px}
+      .usecase-grid{grid-template-columns:1fr}
+      .usecase-card{min-height:175px}
+      footer{min-height:240px;padding-top:50px}
+      .footer-top{flex-direction:column;padding-bottom:22px}
+      .footer-links{flex-wrap:wrap;gap:17px}
+      .footer-bottom{font-size:7px}
+    }
+    /* Readable type scale for the Studio, roadmap, and closing sections. */
+    #studio .section-heading h2,#packs .section-heading h2,
+    #method .section-heading h2,#use-cases .section-heading h2{font-size:56px;line-height:1.12}
+    #studio .section-lede,#packs .section-lede,#method .section-lede,#use-cases .section-lede{
+      max-width:380px;font-size:20px;line-height:1.6
+    }
+    #studio .section-kicker,#packs .section-kicker,#method .section-kicker,#use-cases .section-kicker{
+      font-size:14px;line-height:1.5
+    }
+    #studio .stat-card{min-height:120px;padding:20px 21px}
+    #studio .stat-label,#studio .stat-foot{font-size:14px;line-height:1.5}
+    #studio .stat-value{margin-top:13px;font-size:32px;line-height:1.2}
+    #studio .stat-value .unit{font-size:18px}
+    #studio .studio-top{padding:18px 22px}
+    #studio .avatar{width:42px;height:42px;font-size:14px}
+    #studio .candidate-name{font-size:16px;line-height:1.35}
+    #studio .candidate-role{font-size:14px;line-height:1.5}
+    #studio .status-chip{gap:9px;padding:9px 13px;font-size:14px}
+    #studio .studio-layout{grid-template-columns:205px 1fr}
+    #studio .sidebar{padding:22px 13px}
+    #studio .sidebar-label{padding:0 10px 12px;font-size:14px;line-height:1.5}
+    #studio .side-link{gap:11px;padding:12px 10px;font-size:15px;line-height:1.45}
+    #studio .side-link svg{width:16px;height:16px}
+    #studio .side-count{font-size:14px}
+    #studio .studio-main{padding:27px}
+    #studio .main-title-row{margin-bottom:19px}
+    #studio .main-title{font-size:16px;line-height:1.45}
+    #studio .small-meta{font-size:14px;line-height:1.45}
+    #studio .skills-box{padding:18px}
+    #studio .box-heading{margin-bottom:15px}
+    #studio .box-heading strong{font-size:16px;line-height:1.45}
+    #studio .box-heading span{font-size:14px;line-height:1.45}
+    #studio .skill-list{gap:9px}
+    #studio .skill-chip{gap:8px;padding:8px 11px;font-size:14px;line-height:1.35}
+    #studio .placeholder{font-size:14px;line-height:1.6}
+    #studio .empty-state{padding:16px;font-size:14px;line-height:1.65}
+    #studio .empty-state strong{font-size:16px;line-height:1.5}
+    #studio .matches-table th{padding:14px;font-size:14px;line-height:1.4;letter-spacing:.03em}
+    #studio .matches-table td{padding:15px 14px;font-size:14px;line-height:1.55}
+    #studio .job-title{font-size:16px;line-height:1.45}
+    #studio .job-company{margin-top:4px;font-size:14px;line-height:1.45}
+    #studio .score-cell{font-size:15px!important}
+    #studio .match-status{padding:7px 10px;font-size:14px;line-height:1.35}
+    #studio .detail-row td{padding:16px 18px 18px;line-height:1.65}
+    #studio .detail-label{margin-bottom:9px;font-size:14px;line-height:1.45}
+    #studio .detail-row .skill-chip{margin:2px 3px 2px 0}
+    #studio .chart-card,#studio .notes-card{padding:19px}
+    #studio .chart-label{font:14px var(--mono)}
+    #studio .notes-copy{font-size:15px;line-height:1.65}
+    #studio .notes-callout{margin-top:14px;padding:5px 0 5px 12px;font-size:14px;line-height:1.6}
+    #studio .error-banner{padding:14px 16px;font-size:14px;line-height:1.6}
+    #packs .critique-card{padding:30px}
+    #packs .card-label{gap:10px;font-size:14px;line-height:1.5}
+    #packs .card-label svg{width:18px;height:18px}
+    #packs .critique-card h3{margin:23px 0 15px;font-size:36px;line-height:1.14}
+    #packs .critique-body{font-size:18px;line-height:1.6}
+    #packs .gap-list{gap:9px;margin-top:20px}
+    #packs .gap-chip{padding:9px 12px;font-size:14px;line-height:1.4}
+    #packs .placeholder{font-size:14px;line-height:1.6}
+    #packs .recruiter-note{gap:14px;margin-top:22px;padding:17px}
+    #packs .note-mark{width:32px;height:32px}
+    #packs .note-mark svg{width:16px;height:16px}
+    #packs .note-text{font-size:15px;line-height:1.65}
+    #packs .roadmap-card{margin-top:23px;padding-top:23px}
+    #packs .roadmap-head{gap:12px;margin-bottom:20px}
+    #packs .roadmap-title{font-size:16px;line-height:1.45}
+    #packs .total-hours{font-size:14px;line-height:1.45}
+    #packs .roadmap-list:before{left:13px}
+    #packs .roadmap-item{grid-template-columns:27px 1fr auto;gap:12px;padding-bottom:21px}
+    #packs .roadmap-node{width:27px;height:27px;font-size:14px}
+    #packs .roadmap-topic{padding-top:2px;font-size:15px;line-height:1.5}
+    #packs .roadmap-resource{gap:7px;margin-top:9px}
+    #packs .resource-tag{padding:6px 8px;font-size:14px;line-height:1.35}
+    #packs .roadmap-hours{padding-top:3px;font-size:14px;line-height:1.45}
+    #packs .empty-state{padding:12px 0!important;font-size:14px;line-height:1.65}
+    #packs .empty-state strong{font-size:16px;line-height:1.5}
+    #packs .code-top{padding:17px 20px}
+    #packs .code-title{gap:10px;font-size:14px;line-height:1.5}
+    #packs .code-title svg{width:17px;height:17px}
+    #packs .code-status{gap:8px;font-size:14px;line-height:1.45}
+    #packs .code-window{min-height:350px;padding:24px}
+    #packs .code-window pre{font-size:15px;line-height:1.8}
+    #packs .code-foot{padding:14px 20px;font-size:14px;line-height:1.5}
+    #method .process-band{padding:46px 0}
+    #method .process-item{padding-inline:34px}
+    #method .process-item:first-child{padding-left:0}
+    #method .process-num{font-size:14px;line-height:1.5}
+    #method .process-title{margin:18px 0 10px;font-size:22px;line-height:1.35}
+    #method .process-copy{max-width:320px;font-size:18px;line-height:1.6}
+    #use-cases .usecase-grid{gap:16px}
+    #use-cases .usecase-card{min-height:255px;padding:28px}
+    #use-cases .usecase-index{top:28px;right:28px;font-size:14px}
+    #use-cases .usecase-icon{width:42px;height:42px}
+    #use-cases .usecase-icon svg{width:19px;height:19px}
+    #use-cases .usecase-title{margin:25px 0 11px;font-size:32px;line-height:1.2}
+    #use-cases .usecase-copy{max-width:360px;font-size:18px;line-height:1.6}
+    footer .footer-top{gap:32px;padding-bottom:36px}
+    footer .footer-brand p{max-width:360px;margin-top:16px;font-size:15px;line-height:1.65}
+    footer .footer-links{gap:25px;font-size:16px;line-height:1.5}
+    footer .footer-bottom{gap:20px;padding-top:20px;font-size:15px;line-height:1.5}
+    @media(max-width:680px){
+      #studio .studio-layout{grid-template-columns:minmax(0,1fr)}
+      #studio .sidebar{gap:5px;padding:9px}
+      #studio .studio-main{padding:17px}
+      #studio .stat-card{min-height:110px;padding:16px}
+      #packs .critique-card{padding:22px}
+      #packs .roadmap-item{grid-template-columns:27px minmax(0,1fr) auto;gap:9px}
+      #packs .code-window{min-height:300px;padding:18px}
+      #method .process-grid{grid-template-columns:1fr;gap:25px}
+      #method .process-item,#method .process-item:first-child{padding:0}
+      #method .process-item:not(:last-child):after{display:none}
+      #use-cases .usecase-grid{grid-template-columns:1fr}
+      #use-cases .usecase-card{min-height:230px}
+      footer .footer-top{flex-direction:column;padding-bottom:26px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+    }
+  </style>
+</head>
+<body>
+  <div class="scene" aria-hidden="true">
+    <div class="scene-layer day-plate" id="day-plate"></div>
+    <canvas id="pondfx"></canvas>
+    <div class="scene-layer night-wash" id="night-wash"></div>
+    <div class="scene-layer night-plate" id="night-plate"></div>
+    <div class="scene-vignette"></div>
+    <video class="pond-video" id="pond-video" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261104_160514_d8369d6e-d8ba-4532-9751-b32e0c8aaf75.mp4" muted loop playsinline preload="auto" crossorigin="anonymous"></video>
+  </div>
+  <div class="site">
+    <header class="topbar">
+      <div class="u-wrap topbar-inner">
+        <a class="brand" href="#hero" aria-label="Nectarline home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4.6 14.2c0-4.1 3.3-7.4 7.4-7.4s7.4 3.3 7.4 7.4c0 2.4-1.6 4-3.5 4-1.6 0-2.8-1-2.8-2.5 0-1.2.8-2.1 1.8-2.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7.3 14.4a4.7 4.7 0 0 1 4.7-4.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7.5" cy="6.2" r="1" fill="#c6c6ff"/><circle cx="17.6" cy="5.7" r=".7" fill="#a5efd2"/></svg>
+          </span>
+          <span class="brand-name">nectarline<span>.</span></span>
+          <span class="brand-divider"></span>
+          <span class="brand-caption">Resume &amp; Curation Studio<sup>®</sup></span>
+        </a>
+        <nav class="nav" id="site-nav" aria-label="Main navigation">
+          <a href="#studio">Studio</a>
+          <a href="#packs">Gap analysis</a>
+          <a href="#method">Method</a>
+          <a href="#use-cases">For teams</a>
+          <a class="nav-cta" href="#hero">Start a curation <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </nav>
+        <button class="menu-button" id="menu-button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><svg viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="hero">
+        <div class="u-wrap hero-grid">
+          <div class="hero-copy-column">
+            <div class="eyebrow">AI-powered career curation</div>
+            <h1>Curation Meets<br><em>Career Placement</em></h1>
+            <p class="hero-subline">Nectarline AI — Resume &amp; Curation Studio<sup>®</sup></p>
+            <p class="hero-copy">A considered path from <strong>your experience</strong> to work that fits. Parse your resume, surface promising internships, and see what will move you forward.</p>
+
+            <div class="upload-card">
+              <div class="upload-head">
+                <div class="upload-label"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 13.5V3m0 0L6.5 6.5M10 3l3.5 3.5M4 12.5v3A1.5 1.5 0 0 0 5.5 17h9a1.5 1.5 0 0 0 1.5-1.5v-3" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>Upload a resume</div>
+                <div class="secure-label"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.8 13 4v3.7c0 3.1-2.1 5.3-5 6.5-2.9-1.2-5-3.4-5-6.5V4l5-2.2Z" stroke="currentColor" stroke-width="1.1"/><path d="m5.8 7.8 1.4 1.4 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Private by design</div>
+              </div>
+              <input class="visually-hidden" type="file" id="resume-input" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" aria-label="Choose a PDF or image resume">
+              <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Drop a PDF or image resume here, or browse files">
+                <div class="drop-content" id="drop-content">
+                  <div class="upload-symbol"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4m0 0L8 8m4-4 4 4M5 14.5v3A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5v-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                  <div class="drop-title">Drop your resume to begin</div>
+                  <div class="drop-caption">or <span>browse files</span> on your device</div>
+                </div>
+                <div class="file-meta" id="file-meta">
+                  <div class="file-tile"><svg viewBox="0 0 20 20" fill="none"><path d="M5 2.5h6l4 4v10A1.5 1.5 0 0 1 13.5 18h-8A1.5 1.5 0 0 1 4 16.5v-12A2 2 0 0 1 6 2.5Z" stroke="currentColor" stroke-width="1.2"/><path d="M11 2.8v4h3.7M7 11h6M7 14h6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+                  <div class="file-info"><div class="file-name" id="file-name"></div><div class="file-detail" id="file-detail"></div></div>
+                  <button class="file-remove" id="remove-file" type="button" aria-label="Remove selected file"><svg viewBox="0 0 16 16" fill="none"><path d="m4 4 8 8m0-8-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+                </div>
+              </div>
+              <div class="upload-bottom">
+                <button class="primary-btn" id="analyze-button" type="button" disabled><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.5 11.6 8.4 17.5 10l-5.9 1.6L10 17.5l-1.6-5.9L2.5 10l5.9-1.6L10 2.5Z" stroke="currentColor" stroke-width="1.15" stroke-linejoin="round"/></svg><span>Analyze Resume &amp; Find Matches</span></button>
+                <div class="format-note"><strong>PDF, PNG, JPG, WEBP</strong><br>Up to 20 MB · Files are processed for this analysis</div>
+              </div>
+              <div class="pipeline" id="pipeline" aria-live="polite">
+                <div class="pipeline-top"><span class="pipeline-title" id="pipeline-title">Preparing your analysis…</span><span class="pipeline-count" id="pipeline-count">01 / 03</span></div>
+                <div class="pipeline-track"><div class="pipeline-fill" id="pipeline-fill"></div></div>
+                <div class="pipeline-list" id="pipeline-list"></div>
+              </div>
+              <div class="error-banner" id="error-banner" role="alert"></div>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="visual-orbit"></div>
+            <div class="visual-core"></div>
+            <div class="visual-caption"><span class="live-pip"></span> A calmer way to find your fit</div>
+            <div class="hero-index">CURATION / 001</div>
+          </div>
+        </div>
+        <div class="scroll-cue"><span class="scroll-line"></span> Scroll to explore <span class="scroll-line"></span></div>
+      </section>
+
+      <section class="section-shell" id="studio">
+        <div class="u-wrap">
+          <div class="section-heading">
+            <div><div class="section-kicker">01 / Candidate workspace</div><h2>The Curation Workspace<br>for <em>Top Candidates</em></h2></div>
+            <p class="section-lede">Parsed skills, real-time job vector scores, and gap analysis in one workspace.</p>
+          </div>
+          <div class="stats-grid" aria-label="Candidate matching metrics">
+            <article class="stat-card"><div class="stat-label">Extracted skills</div><div class="stat-value" id="stat-skills">—</div><div class="stat-foot">Structured from resume</div></article>
+            <article class="stat-card"><div class="stat-label">Top match</div><div class="stat-value" id="stat-match">—</div><div class="stat-foot">Highest overall score</div></article>
+            <article class="stat-card"><div class="stat-label">Match confidence</div><div class="stat-value" id="stat-confidence">—</div><div class="stat-foot">Semantic alignment</div></article>
+            <article class="stat-card"><div class="stat-label">Skill gaps</div><div class="stat-value" id="stat-gaps">—</div><div class="stat-foot">Priorities to strengthen</div></article>
+          </div>
+          <div class="studio-shell">
+            <div class="studio-top">
+              <div class="candidate">
+                <div class="avatar" id="candidate-avatar">NL</div>
+                <div><div class="candidate-name" id="candidate-name">Candidate profile</div><div class="candidate-role" id="candidate-role">Upload a resume to curate your next step</div></div>
+              </div>
+              <div class="status-chip"><span class="status-dot"></span><span id="candidate-status">Awaiting resume</span></div>
+            </div>
+            <div class="studio-layout">
+              <aside class="sidebar" aria-label="Workspace sections">
+                <div class="sidebar-label">Workspace</div>
+                <a class="side-link active" href="#parsed-skills"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h6M3 12h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Parsed Skills<span class="side-count" id="side-skills-count">—</span></a>
+                <a class="side-link" href="#match-table"><svg viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2.5" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.1"/><path d="M5 6h6M5 9h6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>Matches<span class="side-count" id="side-matches-count">—</span></a>
+                <a class="side-link" href="#packs"><svg viewBox="0 0 16 16" fill="none"><path d="M3 3.5h10v7H8l-3.2 2v-2H3v-7Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>Recruiter Notes</a>
+                <a class="side-link" href="#roadmap"><svg viewBox="0 0 16 16" fill="none"><circle cx="4" cy="3.5" r="1.2" stroke="currentColor"/><circle cx="11.5" cy="8" r="1.2" stroke="currentColor"/><circle cx="5" cy="12.5" r="1.2" stroke="currentColor"/><path d="m5 4.2 5.5 3M10.5 8.8 6 11.7" stroke="currentColor"/></svg>Roadmap</a>
+              </aside>
+              <div class="studio-main">
+                <div id="dashboard"><div class="main-title-row"><div class="main-title">Candidate snapshot</div><div class="small-meta" id="snapshot-meta">LIVE MATCH DATA</div></div>
+                  <div class="skills-box" id="parsed-skills">
+                    <div class="box-heading"><strong>Extracted candidate skills</strong><span id="skills-total">0 SKILLS</span></div>
+                    <div class="skill-list" id="skill-list"><span class="placeholder">Your verified skills will appear here after resume analysis.</span></div>
+                  </div>
+                </div>
+                <div style="height:16px"></div>
+                <div id="match-table">
+                  <div class="main-title-row"><div class="main-title">Top internship matches</div><div class="small-meta" id="matches-summary">RANKED BY FIT</div></div>
+                  <div class="table-wrap">
+                    <table class="matches-table">
+                      <thead><tr><th>Job title</th><th>Company</th><th>Location</th><th>Match</th><th>Status</th></tr></thead>
+                      <tbody id="matches-body"><tr><td colspan="5"><div class="empty-state"><strong>Your shortlist will take shape here.</strong>Run an analysis to see the roles that align with your experience.</div></td></tr></tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="dashboard-lower">
+                  <div class="chart-card"><div class="box-heading"><strong>Skill alignment by category</strong><span>PROFILE / MATCH</span></div><div id="score-chart"></div></div>
+                  <div class="notes-card" id="recruiter-notes"><div class="box-heading"><strong>Recruiter notes</strong><span>AI CURATION</span></div><p class="notes-copy" id="dashboard-critique">A clear view of your strongest signals and next development areas will appear after your resume is reviewed.</p><div class="notes-callout" id="dashboard-callout">Insight is grounded in your extracted resume and the internship shortlist.</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell" id="packs">
+        <div class="u-wrap">
+          <div class="section-heading">
+            <div><div class="section-kicker">02 / Recruiter perspective</div><h2>Tune your path,<br><em>track growth.</em></h2></div>
+            <p class="section-lede">Understand what makes a strong fit—and turn every gap into a clear, achievable next step.</p>
+          </div>
+          <div class="packs-grid">
+            <article class="glass-card critique-card">
+              <div class="card-label"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2.5 11.5 8l5.5 2-5.5 1.5L10 17l-1.5-5.5L3 10l5.5-2L10 2.5Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>Recruiter gap analysis</div>
+              <h3>A thoughtful read<br>of <em>your next move.</em></h3>
+              <p class="critique-body" id="recruiter-critique">Your recruiter perspective will appear after the matching pipeline reviews your profile against the available internship opportunities.</p>
+              <div class="gap-list" id="gap-list"><span class="placeholder">Skill priorities appear here</span></div>
+              <div class="recruiter-note"><span class="note-mark"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2a4.5 4.5 0 0 0-2.7 8.1c.5.4.7.8.7 1.4h4c0-.6.2-1 .7-1.4A4.5 4.5 0 0 0 8 2Z" stroke="currentColor" stroke-width="1.1"/><path d="M6.5 13h3M7 15h2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></span><div class="note-text" id="growth-note">Specific, attainable learning steps make your next application more intentional. Your personalized recommendations will live here.</div></div>
+              <div class="roadmap-card" id="roadmap">
+                <div class="roadmap-head"><div class="roadmap-title">Your inline learning roadmap</div><div class="total-hours" id="roadmap-hours">PERSONALIZED NEXT STEPS</div></div>
+                <div class="roadmap-list" id="roadmap-list"><div class="empty-state" style="padding:8px 0;text-align:left">Complete an analysis to build a focused learning path from your skill gaps.</div></div>
+              </div>
+            </article>
+            <article class="glass-card json-card">
+              <div class="code-top"><div class="code-title"><svg viewBox="0 0 18 18" fill="none"><path d="m6.5 4-4 5 4 5m5-10 4 5-4 5M10 2l-2 14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Candidate payload</div><div class="code-status"><span class="status-dot"></span><span id="json-status">AWAITING DATA</span></div></div>
+              <div class="code-window"><pre id="json-preview" aria-label="Live candidate payload preview">{
+  "candidate_id": "nl.candidate.pending",
+  "match_score": null,
+  "top_role": null,
+  "missing_skills": []
+}</pre></div>
+              <div class="code-foot" id="json-foot">SCHEMA / CANDIDATE_MATCH_V1</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="process-section" id="method">
+        <div class="u-wrap">
+          <div class="section-heading">
+            <div><div class="section-kicker">03 / A considered process</div><h2>From experience<br>to <em>opportunity.</em></h2></div>
+            <p class="section-lede">A clear signal at every step. No black-box shortlist—just a more useful way to see the path ahead.</p>
+          </div>
+        </div>
+        <div class="process-band">
+          <div class="u-wrap process-grid">
+            <article class="process-item"><div class="process-num">01 — READ</div><h3 class="process-title">Understand the whole story</h3><p class="process-copy">Gemini multimodal parsing turns your resume into a structured profile of skills, experience, projects, and education.</p></article>
+            <article class="process-item"><div class="process-num">02 — CURATE</div><h3 class="process-title">Find a real point of fit</h3><p class="process-copy">Resume embeddings and Qdrant retrieval surface internships, then score alignment across skills and role requirements.</p></article>
+            <article class="process-item"><div class="process-num">03 — GROW</div><h3 class="process-title">Make the next step tangible</h3><p class="process-copy">Recruiter-style feedback connects missing skills to practical learning resources and an estimate of the effort involved.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell" id="use-cases">
+        <div class="u-wrap">
+          <div class="section-heading">
+            <div><div class="section-kicker">04 / A better starting point</div><h2>Make room for<br><em>the next possibility.</em></h2></div>
+            <p class="section-lede">Designed to bring candidates and opportunity into closer focus—without losing sight of what makes each profile distinct.</p>
+          </div>
+          <div class="usecase-grid">
+            <article class="usecase-card"><span class="usecase-index">01</span><div class="usecase-icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="6" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M4 17v-1.5A3.5 3.5 0 0 1 7.5 12h5a3.5 3.5 0 0 1 3.5 3.5V17" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div><h3 class="usecase-title">For emerging talent</h3><p class="usecase-copy">See how your current strengths map to internships—and focus your energy on the skills that can open the next door.</p></article>
+            <article class="usecase-card"><span class="usecase-index">02</span><div class="usecase-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 16.5h14M4.5 14V8.5M8.2 14V5.5M11.9 14V9M15.5 14V3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/><path d="m3.5 6 4-2.5 3.7 3 4.8-4" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3 class="usecase-title">For career advisors</h3><p class="usecase-copy">Bring a concrete, skills-first conversation to candidate coaching with match signals and learning steps in one place.</p></article>
+            <article class="usecase-card"><span class="usecase-index">03</span><div class="usecase-icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 7.5 10 4l7 3.5-7 3.5-7-3.5Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 9v4.2c2.8 2.5 7.2 2.5 10 0V9M17 7.5v5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3 class="usecase-title">For talent programs</h3><p class="usecase-copy">Give cohorts a consistent way to explore opportunities, recognize capability, and build toward the roles they want.</p></article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="u-wrap">
+        <div class="footer-top">
+          <div class="footer-brand"><a class="brand" href="#hero"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4.6 14.2c0-4.1 3.3-7.4 7.4-7.4s7.4 3.3 7.4 7.4c0 2.4-1.6 4-3.5 4-1.6 0-2.8-1-2.8-2.5 0-1.2.8-2.1 1.8-2.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7.3 14.4a4.7 4.7 0 0 1 4.7-4.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="brand-name">nectarline<span>.</span></span></a><p>AI-powered resume and internship curation, designed to make the next move feel clearer.</p></div>
+          <div class="footer-links"><a href="#studio">The studio</a><a href="#packs">Growth roadmap</a><a href="#method">How it works</a><a href="#hero">Back to top ↑</a></div>
+        </div>
+        <div class="footer-bottom"><span>© 2026 Nectarline AI · Resume &amp; Curation Studio®</span><span>Curated with intention.</span></div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+      const API_URL = "http://127.0.0.1:8000/api/v1/match";
+      const allowedExtensions = new Set(["pdf", "png", "jpg", "jpeg", "webp"]);
+      const stageMessages = [
+        "Running Gemini Multimodal OCR & Parsing Resume...",
+        "Querying Qdrant Vector DB for Top Internship Matches...",
+        "Generating Recruiter Gap Analysis & Learning Roadmap..."
+      ];
+      const input = document.getElementById("resume-input");
+      const dropzone = document.getElementById("dropzone");
+      const dropContent = document.getElementById("drop-content");
+      const fileMeta = document.getElementById("file-meta");
+      const analyzeButton = document.getElementById("analyze-button");
+      const pipeline = document.getElementById("pipeline");
+      const errorBanner = document.getElementById("error-banner");
+      const menuButton = document.getElementById("menu-button");
+      const nav = document.getElementById("site-nav");
+      let selectedFile = null;
+      let isAnalyzing = false;
+      let progressTimer = 0;
+      let pipelineInterval = null;
+      let activeStage = -1;
+      let latestResult = null;
+
+      const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+      const formatBytes = bytes => bytes < 1024 * 1024
+        ? `${Math.max(1, Math.round(bytes / 1024))} KB`
+        : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+      const clampPercent = value => {
+        const number = Number(value);
+        if (!Number.isFinite(number)) return 0;
+        return Math.round(Math.max(0, Math.min(1, number)) * 100);
+      };
+      const setUnit = () => {
+        const width = window.innerWidth;
+        const unit = width < 390 ? width / 390 : width > 1440 ? width / 1440 : 1;
+        document.documentElement.style.setProperty("--u", String(unit));
+      };
+      setUnit();
+      window.addEventListener("resize", setUnit, { passive: true });
+
+      menuButton.addEventListener("click", () => {
+        const open = menuButton.getAttribute("aria-expanded") !== "true";
+        menuButton.setAttribute("aria-expanded", String(open));
+        menuButton.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+        nav.classList.toggle("open", open);
+      });
+      nav.addEventListener("click", event => {
+        if (event.target.closest("a")) {
+          nav.classList.remove("open");
+          menuButton.setAttribute("aria-expanded", "false");
+          menuButton.setAttribute("aria-label", "Open navigation");
+        }
+      });
+
+      function showError(message) {
+        errorBanner.textContent = message;
+        errorBanner.classList.add("visible");
+      }
+      function hideError() {
+        errorBanner.textContent = "";
+        errorBanner.classList.remove("visible");
+      }
+      function renderPipeline(stage) {
+        activeStage = Math.max(0, Math.min(stage, stageMessages.length - 1));
+        document.getElementById("pipeline-title").textContent = stageMessages[activeStage];
+        document.getElementById("pipeline-count").textContent = `${String(activeStage + 1).padStart(2, "0")} / 03`;
+        document.getElementById("pipeline-fill").style.width = `${((activeStage + 1) / stageMessages.length) * 100}%`;
+        document.getElementById("pipeline-list").innerHTML = stageMessages.map((message, index) => {
+          const state = index < activeStage ? "done" : index === activeStage ? "current" : "";
+          const symbol = index < activeStage ? "✓" : String(index + 1).padStart(2, "0");
+          return `<div class="pipeline-step ${state}"><span class="pipeline-dot">${symbol}</span><span>${escapeHTML(message)}</span></div>`;
+        }).join("");
+      }
+      function stopPipelineTimers() {
+        window.clearTimeout(progressTimer);
+        if (pipelineInterval) window.clearInterval(pipelineInterval);
+        pipelineInterval = null;
+      }
+      function setFile(file) {
+        if (!file) return;
+        const extension = file.name.split(".").pop().toLowerCase();
+        if (!allowedExtensions.has(extension)) {
+          showError("Unsupported file type. Please choose a PDF, PNG, JPG, JPEG, or WEBP file.");
+          return;
+        }
+        if (file.size > 20 * 1024 * 1024) {
+          showError("This file is larger than the 20 MB upload limit. Choose a smaller resume.");
+          return;
+        }
+        hideError();
+        selectedFile = file;
+        document.getElementById("file-name").textContent = file.name;
+        document.getElementById("file-detail").textContent = `${formatBytes(file.size)}  ·  ${extension.toUpperCase()}  ·  Ready to analyze`;
+        dropContent.style.display = "none";
+        fileMeta.style.display = "flex";
+        dropzone.setAttribute("role", "group");
+        dropzone.setAttribute("aria-label", `Selected file ${file.name}`);
+        dropzone.tabIndex = -1;
+        analyzeButton.disabled = isAnalyzing;
+        document.getElementById("candidate-status").textContent = "Resume selected";
+      }
+      function clearFile() {
+        selectedFile = null;
+        input.value = "";
+        fileMeta.style.display = "none";
+        dropContent.style.display = "block";
+        dropzone.setAttribute("role", "button");
+        dropzone.setAttribute("aria-label", "Drop a PDF or image resume here, or browse files");
+        dropzone.tabIndex = 0;
+        analyzeButton.disabled = true;
+        if (!isAnalyzing) document.getElementById("candidate-status").textContent = "Awaiting resume";
+      }
+      input.addEventListener("change", () => setFile(input.files && input.files[0]));
+      dropzone.addEventListener("click", event => {
+        if (event.target.closest("#remove-file")) return;
+        if (!selectedFile) input.click();
+      });
+      dropzone.addEventListener("keydown", event => {
+        if (!selectedFile && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          input.click();
+        }
+      });
+      ["dragenter", "dragover"].forEach(name => dropzone.addEventListener(name, event => {
+        event.preventDefault();
+        dropzone.classList.add("is-dragging");
+      }));
+      ["dragleave", "drop"].forEach(name => dropzone.addEventListener(name, event => {
+        event.preventDefault();
+        if (name === "drop" || !dropzone.contains(event.relatedTarget)) dropzone.classList.remove("is-dragging");
+      }));
+      dropzone.addEventListener("drop", event => setFile(event.dataTransfer.files && event.dataTransfer.files[0]));
+      document.getElementById("remove-file").addEventListener("click", event => {
+        event.stopPropagation();
+        clearFile();
+        hideError();
+      });
+      analyzeButton.addEventListener("click", analyzeResume);
+
+      async function analyzeResume() {
+        if (!selectedFile || isAnalyzing) return;
+        hideError();
+        isAnalyzing = true;
+        analyzeButton.disabled = true;
+        analyzeButton.querySelector("span").textContent = "Analyzing your resume…";
+        document.getElementById("candidate-status").textContent = "Analysis in progress";
+        pipeline.classList.add("active");
+        renderPipeline(0);
+        const startedAt = Date.now();
+        pipelineInterval = window.setInterval(() => {
+          const elapsed = Date.now() - startedAt;
+          renderPipeline(elapsed < 6500 ? 0 : elapsed < 14500 ? 1 : 2);
+        }, 500);
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        try {
+          const response = await fetch(API_URL, { method: "POST", body: formData });
+          let payload;
+          try {
+            payload = await response.json();
+          } catch (parseError) {
+            throw new Error(`The matching service returned an unreadable response (${response.status}).`);
+          }
+          if (!response.ok) {
+            const detail = payload && typeof payload.detail === "string" ? payload.detail : `The matching service returned an error (${response.status}).`;
+            throw new Error(detail);
+          }
+          if (!payload || !payload.resume || !Array.isArray(payload.top_internships)) {
+            throw new Error("The matching service returned an incomplete analysis. Please try again.");
+          }
+          renderPipeline(2);
+          latestResult = payload;
+          renderResult(payload, selectedFile);
+          window.setTimeout(() => document.getElementById("studio").scrollIntoView({ behavior: "smooth", block: "start" }), 180);
+          document.getElementById("candidate-status").textContent = "Analysis complete";
+        } catch (error) {
+          const message = error instanceof TypeError
+            ? "Could not reach the FastAPI matching service. Start the API at 127.0.0.1:8000, then try again."
+            : error instanceof Error ? error.message : "An unexpected error interrupted the analysis.";
+          showError(message);
+          document.getElementById("candidate-status").textContent = "Analysis needs attention";
+        } finally {
+          stopPipelineTimers();
+          isAnalyzing = false;
+          analyzeButton.disabled = !selectedFile;
+          analyzeButton.querySelector("span").textContent = "Analyze Resume & Find Matches";
+        }
+      }
+
+      function unique(values) {
+        return [...new Set((values || []).filter(value => typeof value === "string" && value.trim()).map(value => value.trim()))];
+      }
+      function normalizeRatio(value) {
+        const number = Number(value);
+        if (!Number.isFinite(number)) return null;
+        return Math.max(0, Math.min(1, number > 1 ? number / 100 : number));
+      }
+      function categoryScores(skills, matches) {
+        const groups = [
+          { label: "Frontend", test: /react|vue|angular|javascript|typescript|html|css|ui|frontend|next\.?js/i },
+          { label: "Backend", test: /python|java|node|express|django|flask|api|backend|sql|database|fastapi|go\b/i },
+          { label: "AI / ML", test: /machine learning|deep learning|tensorflow|pytorch|nlp|artificial intelligence|llm|data science|scikit/i },
+          { label: "DevOps", test: /docker|kubernetes|aws|azure|gcp|linux|git|ci\/cd|devops|cloud/i }
+        ];
+        return groups.map(group => {
+          const candidate = skills.filter(skill => group.test.test(skill));
+          const related = matches.flatMap(match => [
+            ...(match.match_score?.matched_required || []),
+            ...(match.match_score?.matched_preferred || [])
+          ]).filter(skill => group.test.test(skill));
+          const denominator = candidate.length || skills.length ? candidate.length || Math.max(1, Math.ceil(skills.length / 4)) : 0;
+          const score = denominator ? Math.min(100, Math.round((unique(related).length / denominator) * 100)) : 0;
+          return { label: group.label, score, candidate: candidate.length };
+        });
+      }
+      function renderChart(scores) {
+        const width = 400, height = 151, left = 31, top = 14, chartWidth = 350, chartHeight = 99;
+        const points = scores.map((item, index) => ({
+          x: left + (chartWidth / (scores.length - 1)) * index,
+          y: top + chartHeight - (item.score / 100) * chartHeight
+        }));
+        const line = points.map((point, index) => `${index ? "L" : "M"}${point.x},${point.y}`).join(" ");
+        const area = `${line} L${points[points.length - 1].x},${top + chartHeight} L${points[0].x},${top + chartHeight} Z`;
+        document.getElementById("score-chart").innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Skill alignment: ${scores.map(score => `${escapeHTML(score.label)} ${score.score} percent`).join(", ")}"><defs><linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#9298ff" stop-opacity=".34"/><stop offset="1" stop-color="#9298ff" stop-opacity=".01"/></linearGradient></defs><path class="chart-grid" d="M${left},${top}H${left + chartWidth}M${left},${top + chartHeight / 2}H${left + chartWidth}M${left},${top + chartHeight}H${left + chartWidth}"/><path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/>${points.map((point, index) => `<circle class="chart-point" cx="${point.x}" cy="${point.y}" r="3.5"/><text class="chart-label" x="${point.x}" y="${top + chartHeight + 20}" text-anchor="middle">${escapeHTML(scores[index].label)}</text>`).join("")}</svg>`;
+      }
+      function renderMatches(matches) {
+        const tbody = document.getElementById("matches-body");
+        document.getElementById("matches-summary").textContent = `${matches.length} ROLE${matches.length === 1 ? "" : "S"} / SCORED`;
+        document.getElementById("side-matches-count").textContent = String(matches.length).padStart(2, "0");
+        if (!matches.length) {
+          tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><strong>No close matches in the current internship collection.</strong>Try again after the opportunity database has been populated.</div></td></tr>`;
+          return;
+        }
+        tbody.innerHTML = matches.map((match, index) => {
+          const job = match.internship || {};
+          const score = match.match_score || {};
+          const percent = clampPercent(score.overall_score);
+          const gaps = unique([...(score.missing_required || []), ...(score.missing_preferred || [])]);
+          const id = `match-detail-${index}`;
+          return `<tr class="match-row" data-detail="${id}" tabindex="0" aria-expanded="false"><td><div class="job-title">${escapeHTML(job.title || "Internship role")}</div><div class="job-company">${escapeHTML(job.duration || "Internship")}</div></td><td>${escapeHTML(job.company || "Company not specified")}</td><td>${escapeHTML(job.location || "—")}</td><td class="score-cell">${percent}%</td><td><span class="match-status">${percent >= 70 ? "Strong fit" : percent >= 45 ? "Potential fit" : "Explore"}</span></td></tr><tr class="detail-row" id="${id}"><td colspan="5"><div class="detail-label">Skills to strengthen</div>${gaps.length ? gaps.map(skill => `<span class="skill-chip gap">${escapeHTML(skill)}</span>`).join(" ") : "No missing skills were identified for this role."}${job.description ? `<div style="margin-top:9px">${escapeHTML(job.description)}</div>` : ""}</td></tr>`;
+        }).join("");
+        tbody.querySelectorAll(".match-row").forEach(row => {
+          const toggle = () => {
+            const expanded = row.getAttribute("aria-expanded") === "true";
+            row.setAttribute("aria-expanded", String(!expanded));
+            row.classList.toggle("expanded", !expanded);
+            document.getElementById(row.dataset.detail).classList.toggle("open", !expanded);
+          };
+          row.addEventListener("click", toggle);
+          row.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              toggle();
+            }
+          });
+        });
+      }
+      function resourceClass(type) {
+        const kind = String(type || "").toLowerCase();
+        if (kind.includes("project")) return "project";
+        if (kind.includes("doc")) return "docs";
+        return "";
+      }
+      function renderRoadmap(gapAnalysis) {
+        const list = document.getElementById("roadmap-list");
+        const steps = gapAnalysis?.learning_path || [];
+        if (!steps.length) {
+          list.innerHTML = `<div class="empty-state" style="padding:8px 0;text-align:left">${gapAnalysis ? "No learning steps were recommended for this profile." : "Recruiter feedback and roadmap are unavailable until a close internship match is found."}</div>`;
+          document.getElementById("roadmap-hours").textContent = "NO STEPS RECOMMENDED";
+          return;
+        }
+        const total = steps.reduce((sum, item) => sum + (Number(item.estimated_hours) || 0), 0);
+        document.getElementById("roadmap-hours").textContent = `${total} EST. HOURS`;
+        list.innerHTML = steps.map((item, index) => {
+          const type = item.resource_type || "Resource";
+          const hours = Number(item.estimated_hours) || 0;
+          return `<div class="roadmap-item"><span class="roadmap-node">${String(index + 1).padStart(2, "0")}</span><div><div class="roadmap-topic">${escapeHTML(item.topic || "Skill development")}</div><div class="roadmap-resource"><span class="resource-tag ${resourceClass(type)}">${escapeHTML(type)}</span></div></div><span class="roadmap-hours">${hours} HRS</span></div>`;
+        }).join("");
+      }
+      function highlightJSON(json) {
+        const safe = escapeHTML(json);
+        return safe.replace(/("(?:\\.|[^"\\])*")(\s*:)?|(-?\b\d+(?:\.\d+)?\b)|\b(null|true|false)\b/g, (match, quoted, colon, number, literal) => {
+          if (quoted) return `<span class="${colon ? "json-key" : "json-string"}">${quoted}</span>${colon || ""}`;
+          if (number) return `<span class="json-number">${number}</span>`;
+          return `<span class="json-number">${literal}</span>`;
+        });
+      }
+      function renderJSON(payload, file, topMatch, missingSkills) {
+        const resume = payload.resume || {};
+        const topRole = topMatch?.internship?.title || null;
+        const matchScore = topMatch ? Math.round((normalizeRatio(topMatch.match_score?.overall_score) || 0) * 100) / 100 : null;
+        const data = {
+          candidate_id: "nl.candidate." + (file.name.replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]+/g, ".").replace(/^\.+|\.+$/g, "").slice(0, 32) || "profile"),
+          skills_extracted: resume.skills?.length || 0,
+          match_score: matchScore,
+          top_role: topRole,
+          missing_skills: missingSkills
+        };
+        const json = JSON.stringify(data, null, 2);
+        const preview = document.getElementById("json-preview");
+        document.getElementById("json-status").textContent = "LIVE PAYLOAD";
+        document.getElementById("json-foot").textContent = `${file.name.toUpperCase()}  /  CANDIDATE_MATCH_V1`;
+        let index = 0;
+        preview.textContent = "";
+        const interval = window.setInterval(() => {
+          index = Math.min(index + 4, json.length);
+          preview.textContent = json.slice(0, index);
+          if (index >= json.length) {
+            window.clearInterval(interval);
+            preview.innerHTML = highlightJSON(json);
+          }
+        }, 8);
+      }
+      function renderResult(payload, file) {
+        const resume = payload.resume || {};
+        const matches = payload.top_internships || [];
+        const gapAnalysis = payload.gap_analysis || null;
+        const skills = unique(resume.skills || []);
+        const topMatch = matches[0] || null;
+        const score = topMatch?.match_score || {};
+        const missingSkills = unique([
+          ...(gapAnalysis?.missing_skills || []),
+          ...(score.missing_required || []),
+          ...(score.missing_preferred || [])
+        ]);
+        const matchingSkills = unique([
+          ...(score.matched_required || []),
+          ...(score.matched_preferred || [])
+        ]);
+        const confidenceRatio = normalizeRatio(score.semantic_similarity) ?? normalizeRatio(score.overall_score);
+        document.getElementById("stat-skills").textContent = String(skills.length);
+        document.getElementById("stat-match").innerHTML = topMatch ? `${clampPercent(score.overall_score)}<span class="unit">%</span>` : "—";
+        document.getElementById("stat-confidence").innerHTML = confidenceRatio === null ? "—" : `${Math.round(confidenceRatio * 100)}<span class="unit">%</span>`;
+        document.getElementById("stat-gaps").textContent = String(missingSkills.length);
+        document.getElementById("side-skills-count").textContent = String(skills.length).padStart(2, "0");
+        document.getElementById("skills-total").textContent = `${skills.length} SKILL${skills.length === 1 ? "" : "S"}`;
+        document.getElementById("skill-list").innerHTML = skills.length
+          ? skills.map(skill => `<span class="skill-chip ${matchingSkills.some(match => match.toLowerCase() === skill.toLowerCase()) ? "matched" : ""}">${escapeHTML(skill)}</span>`).join("")
+          : `<span class="placeholder">No skills were extracted from this resume.</span>`;
+        const role = resume.experience?.[0]?.role || "Candidate profile";
+        document.getElementById("candidate-name").textContent = file.name.replace(/\.[^.]+$/, "");
+        document.getElementById("candidate-role").textContent = `${role} · ${skills.length} extracted skills`;
+        document.getElementById("candidate-avatar").textContent = file.name.replace(/\.[^.]+$/, "").split(/[\s_-]+/).filter(Boolean).slice(0, 2).map(part => part[0]).join("").toUpperCase() || "NL";
+        document.getElementById("snapshot-meta").textContent = `UPDATED ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+        renderMatches(matches);
+        renderChart(categoryScores(skills, matches));
+        const critique = gapAnalysis?.resume_critique || (matches.length ? "A recruiter critique was not returned for this profile. Review the role-specific skill breakdown and use the recommendations below to guide your next step." : "There are no close internship matches in the current collection, so personalized recruiter feedback is not yet available.");
+        document.getElementById("recruiter-critique").textContent = critique;
+        document.getElementById("dashboard-critique").textContent = critique;
+        document.getElementById("dashboard-callout").textContent = missingSkills.length
+          ? `Focus areas: ${missingSkills.slice(0, 4).join(" · ")}`
+          : "Your profile aligns with the skill requirements identified for these roles.";
+        document.getElementById("growth-note").textContent = gapAnalysis
+          ? "Use the learning steps below to build evidence in your priority areas, then revisit your shortlist as your experience grows."
+          : "A personalized roadmap will appear once recruiter gap analysis is available for a matching role.";
+        document.getElementById("gap-list").innerHTML = missingSkills.length
+          ? missingSkills.map(skill => `<span class="gap-chip">${escapeHTML(skill)}</span>`).join("")
+          : `<span class="skill-chip matched">No skill gaps identified</span>`;
+        renderRoadmap(gapAnalysis);
+        renderJSON(payload, file, topMatch, missingSkills);
+        document.querySelectorAll(".side-link").forEach(link => link.classList.toggle("active", link.getAttribute("href") === "#parsed-skills"));
+      }
+
+      function smoothstep(edge0, edge1, value) {
+        const x = Math.max(0, Math.min(1, (value - edge0) / (edge1 - edge0)));
+        return x * x * (3 - 2 * x);
+      }
+      let scrollTicking = false;
+      function updateSceneCrossfade() {
+        const y = window.scrollY;
+        const h = window.innerHeight;
+        const doc = document.documentElement;
+        const endTop = Math.max(0, doc.scrollHeight - h);
+        const dusk = smoothstep(.15 * h, 1.05 * h, y);
+        const night = smoothstep(endTop - 1.1 * h, endTop - .1 * h, y);
+        document.getElementById("night-wash").style.opacity = String(dusk * (1 - night * .35));
+        document.getElementById("night-plate").style.opacity = String(night);
+        scrollTicking = false;
+      }
+      window.addEventListener("scroll", () => {
+        if (!scrollTicking) {
+          scrollTicking = true;
+          requestAnimationFrame(updateSceneCrossfade);
+        }
+      }, { passive: true });
+      window.addEventListener("resize", updateSceneCrossfade, { passive: true });
+      window.setTimeout(updateSceneCrossfade, 100);
+
+      window.Nectarline = { getResult: () => latestResult };
+    })();
+  </script>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const video = document.getElementById("pond-video");
+    const shaderVertex = `
+      attribute vec2 position;
+      varying vec2 vUv;
+      void main(){vUv=position*.5+.5;gl_Position=vec4(position,0.,1.);}
+    `;
+    const shaderFragment = `
+      precision highp float;
+      varying vec2 vUv;
+      uniform sampler2D uDay;
+      uniform sampler2D uPond;
+      uniform vec2 uResolution;
+      uniform vec2 uMouse;
+      uniform float uTime;
+      uniform float uPondReady;
+      void main(){
+        vec2 uv=vec2(vUv.x,1.0-vUv.y);
+        vec2 aspect=vec2(uResolution.x/uResolution.y,1.0);
+        float distanceFromMouse=length((uv-uMouse)*aspect);
+        float ripple=sin(distanceFromMouse*38.0-uTime*2.7)*exp(-distanceFromMouse*4.4);
+        float influence=exp(-distanceFromMouse*10.0);
+        vec2 tilt=(uMouse-.5)*.004;
+        vec2 displaced=uv+tilt+normalize((uv-uMouse)+vec2(.0001))*ripple*.0019*influence;
+        float aberration=.0016*influence;
+        vec4 day=texture2D(uDay,clamp(displaced,0.001,0.999));
+        vec4 red=texture2D(uDay,clamp(displaced+vec2(aberration,0.0),0.001,0.999));
+        vec4 blue=texture2D(uDay,clamp(displaced-vec2(aberration,0.0),0.001,0.999));
+        vec4 pond=texture2D(uPond,clamp(displaced,0.001,0.999));
+        float videoMix=uPondReady*.19;
+        vec3 color=mix(day.rgb,pond.rgb,videoMix);
+        color.r=mix(color.r,red.r, influence*.27);
+        color.b=mix(color.b,blue.b,influence*.32);
+        gl_FragColor=vec4(color,1.0);
+      }
+    `;
+    function initPondFX() {
+      const canvas = document.getElementById("pondfx");
+      const gl = canvas.getContext("webgl", { alpha: true, antialias: false, powerPreference: "low-power" });
+      if (!gl) {
+        canvas.style.opacity = "0";
+        console.warn("Nectarline pond ripple is unavailable; using the static day plate.");
+        return;
+      }
+      const compile = (type, source) => {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          const message = gl.getShaderInfoLog(shader);
+          gl.deleteShader(shader);
+          throw new Error(message || "Unknown WebGL shader compile error.");
+        }
+        return shader;
+      };
+      let program;
+      try {
+        program = gl.createProgram();
+        gl.attachShader(program, compile(gl.VERTEX_SHADER, shaderVertex));
+        gl.attachShader(program, compile(gl.FRAGMENT_SHADER, shaderFragment));
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) || "Unable to link the pond shader.");
+      } catch (error) {
+        console.error("Nectarline pond ripple shader failed:", error);
+        canvas.style.opacity = "0";
+        return;
+      }
+      gl.useProgram(program);
+      const vertices = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertices);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+      const position = gl.getAttribLocation(program, "position");
+      gl.enableVertexAttribArray(position);
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+      const makeTexture = unit => {
+        const texture = gl.createTexture();
+        gl.activeTexture(gl.TEXTURE0 + unit);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        return texture;
+      };
+      const dayTexture = makeTexture(0);
+      const pondTexture = makeTexture(1);
+      const pixel = new Uint8Array([36, 24, 71, 255]);
+      gl.bindTexture(gl.TEXTURE_2D, dayTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+      gl.bindTexture(gl.TEXTURE_2D, pondTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+      const uniforms = {
+        day: gl.getUniformLocation(program, "uDay"),
+        pond: gl.getUniformLocation(program, "uPond"),
+        resolution: gl.getUniformLocation(program, "uResolution"),
+        mouse: gl.getUniformLocation(program, "uMouse"),
+        time: gl.getUniformLocation(program, "uTime"),
+        pondReady: gl.getUniformLocation(program, "uPondReady")
+      };
+      gl.uniform1i(uniforms.day, 0);
+      gl.uniform1i(uniforms.pond, 1);
+      const pointer = { x: .72, y: .43, tx: .72, ty: .43 };
+      let videoReady = false;
+      let dayReady = false;
+      const upload = (texture, source, unit) => {
+        gl.activeTexture(gl.TEXTURE0 + unit);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
+      };
+      const image = new Image();
+      image.crossOrigin = "anonymous";
+      image.onload = () => { dayReady = true; };
+      image.onerror = () => console.warn("Nectarline day plate texture is unavailable; its CSS image remains visible.");
+      image.src = "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261104_151305_25ef1f45-0886-491c-a7a8-81e296402d5a.png&w=2400&q=85";
+      video.addEventListener("canplay", () => { videoReady = true; }, { once: true });
+      if (!prefersReducedMotion) {
+        video.play().catch(error => console.warn("Nectarline pond loop could not autoplay:", error));
+        window.addEventListener("pointermove", event => {
+          pointer.tx = event.clientX / window.innerWidth;
+          pointer.ty = 1 - event.clientY / window.innerHeight;
+        }, { passive: true });
+      }
+      const resize = () => {
+        const ratio = Math.min(window.devicePixelRatio || 1, 1.4);
+        canvas.width = Math.round(window.innerWidth * ratio);
+        canvas.height = Math.round(window.innerHeight * ratio);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
+      };
+      window.addEventListener("resize", resize, { passive: true });
+      resize();
+      const started = performance.now();
+      let frame = 0;
+      function draw(now) {
+        if (!prefersReducedMotion) frame = requestAnimationFrame(draw);
+        if (now - (draw.last || 0) < 33) return;
+        draw.last = now;
+        pointer.x += (pointer.tx - pointer.x) * .035;
+        pointer.y += (pointer.ty - pointer.y) * .035;
+        try {
+          if (dayReady) upload(dayTexture, image, 0);
+          if (videoReady && video.readyState >= 2 && now - lastVideoUpload > 90) {
+            upload(pondTexture, video, 1);
+            lastVideoUpload = now;
+          }
+          gl.uniform2f(uniforms.mouse, pointer.x, pointer.y);
+          gl.uniform1f(uniforms.time, (now - started) / 1000);
+          gl.uniform1f(uniforms.pondReady, videoReady ? 1 : 0);
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
+        } catch (error) {
+          console.error("Nectarline pond texture update failed; reverting to the static plate.", error);
+          canvas.style.opacity = "0";
+          cancelAnimationFrame(frame);
+        }
+      }
+      let lastVideoUpload = 0;
+      requestAnimationFrame(draw);
+    }
+    initPondFX();
+  </script>
+</body>
+</html>

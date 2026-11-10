@@ -1,0 +1,21 @@
+{
+  "skills": [
+    "API"
+  ],
+  "education": [],
+  "experience": [
+    {
+      "role": "Software Engineer",
+      "company": "Tech Corp",
+      "duration": "2024-2026",
+      "description": [
+        "Maintained primary codebase applications.",
+        "Implemented API endpoints."
+      ],
+      "tech": [
+        "API"
+      ]
+    }
+  ],
+  "projects": []
+}

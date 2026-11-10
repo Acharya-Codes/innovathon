@@ -1,0 +1,40 @@
+{
+  "skills": [
+    "LinkedIn",
+    "Instagram"
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Business Administration in Marketing",
+      "institution": "Pacific University",
+      "year": "2026",
+      "cgpa": ""
+    }
+  ],
+  "experience": [
+    {
+      "role": "Marketing Intern",
+      "company": "Apex Digital Solutions",
+      "duration": "Jan 2026 – May 2026",
+      "description": [
+        "Managed corporate LinkedIn and Instagram accounts, increasing organic engagement by 22% over 4 months.",
+        "Assisted in launching a targeted email drip campaign that improved click-through rates by 14%."
+      ],
+      "tech": [
+        "LinkedIn",
+        "Instagram"
+      ]
+    },
+    {
+      "role": "Social Media Intern",
+      "company": "Vanguard Retail Group",
+      "duration": "June 2025 – Dec 2025",
+      "description": [
+        "Curated weekly content calendars and analyzed demographic metrics to optimize posting schedules.",
+        "Collaborated with design teams to produce high-performing graphic assets and copy."
+      ],
+      "tech": []
+    }
+  ],
+  "projects": []
+}

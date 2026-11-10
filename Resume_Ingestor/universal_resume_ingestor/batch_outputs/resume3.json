@@ -1,0 +1,40 @@
+{
+  "skills": [],
+  "education": [
+    {
+      "degree": "Master of Business Administration (MBA)",
+      "institution": "Columbia Business School",
+      "year": "",
+      "cgpa": ""
+    },
+    {
+      "degree": "Bachelor of Science in Industrial Engineering",
+      "institution": "Cornell University",
+      "year": "",
+      "cgpa": ""
+    }
+  ],
+  "experience": [
+    {
+      "role": "VP of Global Operations",
+      "company": "Zenith Enterprises",
+      "duration": "2022 – Present",
+      "description": [
+        "Direct operational strategy across three international divisions, driving a 15% increase in production efficiency.",
+        "Manage an annual operational budget of $4.5M, successfully executing continuous cost-containment measures."
+      ],
+      "tech": []
+    },
+    {
+      "role": "Director of Operations",
+      "company": "Nexus Logistics",
+      "duration": "2018 – 2022",
+      "description": [
+        "Managed a team of 45 logistical staff members to execute product distribution fulfillment frameworks.",
+        "Implemented an updated inventory management system that cut warehouse dispatch delays by 30%."
+      ],
+      "tech": []
+    }
+  ],
+  "projects": []
+}

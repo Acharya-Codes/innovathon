@@ -1,0 +1,30 @@
+{
+  "skills": [
+    "Salesforce",
+    "Microsoft Office Suite"
+  ],
+  "education": [],
+  "experience": [
+    {
+      "role": "Operations Specialist",
+      "company": "Centric Corporate Services",
+      "duration": "2024 – Present",
+      "description": [
+        "Oversee day-to-day office administrative procedures for a staff of 60+ personnel.",
+        "Negotiated new vendor supply contracts, lowering annual corporate overhead costs by 12%."
+      ],
+      "tech": []
+    },
+    {
+      "role": "Administrative Coordinator",
+      "company": "Beacon Logistics Corp",
+      "duration": "2022 – 2024",
+      "description": [
+        "Processed bi-weekly billing distributions and resolved client account discrepancies with 99% accuracy.",
+        "Coordinated onboarding schedules and material handbooks for incoming staff members."
+      ],
+      "tech": []
+    }
+  ],
+  "projects": []
+}

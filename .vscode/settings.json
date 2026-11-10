@@ -1,0 +1,7 @@
+{  
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/Member2_Matching_Engine",
+    "${workspaceFolder}/Resume_Ingestor/universal_resume_ingestor",
+    "${workspaceFolder}/Member3_API"
+  ]
+}
