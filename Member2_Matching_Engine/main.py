@@ -28,7 +28,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # ------------------------------------------------------------------------------
-# FASTAPI ENGINE APPLICATION FOR PRODUCTION & JUDGE ACCESS
+# FASTAPI ENGINE APPLICATION
 # ------------------------------------------------------------------------------
 app = FastAPI(
     title="Nectarline Talent Curation API",
@@ -36,7 +36,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Enable CORS for cross-origin requests from local dev servers / Netlify / GitHub Pages
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -55,9 +54,16 @@ KNOWN_SKILLS = [
     "ONNX Runtime", "Figma", "UI/UX", "Design Systems", "WebGL", "Three.js",
 ]
 
+ROLE_KEYWORDS = [
+    "Software Engineer", "Frontend Developer", "Backend Developer", "Full Stack Developer",
+    "Machine Learning Engineer", "AI Engineer", "Data Scientist", "Data Analyst",
+    "UI/UX Designer", "Product Designer", "Systems Engineer", "Research Assistant",
+    "Teaching Assistant", "Developer Intern", "Software Engineering Intern",
+]
+
 
 def _extract_candidate_profile(resume_text: str, filename: str) -> Dict[str, Any]:
-    """Extracts candidate name, email, detected skills, and summary snippet from resume text."""
+    """Extracts candidate metadata, experience role, and skills from resume text."""
     lines = [line.strip() for line in resume_text.splitlines() if line.strip()]
 
     candidate_name = "Candidate"
@@ -75,7 +81,13 @@ def _extract_candidate_profile(resume_text: str, filename: str) -> Dict[str, Any
         if re.search(rf"\b{re.escape(skill.lower())}\b", text_lower)
     ]
     if not detected_skills:
-        detected_skills = ["Python", "FastAPI", "SQL", "Git", "Problem Solving"]
+        detected_skills = ["Python", "Java", "SQL", "Git", "Problem Solving"]
+
+    detected_role = "Software & AI Intern Candidate"
+    for role in ROLE_KEYWORDS:
+        if role.lower() in text_lower:
+            detected_role = role
+            break
 
     snippet = resume_text[:300].strip() if resume_text else "Resume parsed successfully."
 
@@ -88,6 +100,92 @@ def _extract_candidate_profile(resume_text: str, filename: str) -> Dict[str, Any
         "raw_text": resume_text,
         "skills": detected_skills,
         "extracted_skills": detected_skills,
+        "experience": [
+            {
+                "role": detected_role,
+                "company": "Academic & Project Portfolio",
+                "duration": "Current",
+            }
+        ],
+    }
+
+
+def _generate_gap_analysis(
+    resume_text: str,
+    candidate_skills: List[str],
+    top_match: Dict[str, Any],
+    missing_skills: List[str],
+) -> Dict[str, Any]:
+    """Generates recruiter critique and learning path via Gemini with a structured fallback."""
+    target_role = top_match.get("title", "Software & AI Intern")
+    target_company = top_match.get("company", "Nectarline Partner")
+    matched = top_match.get("matching_skills", candidate_skills[:4])
+    gaps = missing_skills or ["Docker", "System Design", "CI/CD"]
+
+    critique = (
+        f"Your background in {', '.join(matched[:3])} gives you a strong foundation for the "
+        f"{target_role} role at {target_company}. To stand out in technical interviews, "
+        f"add measurable impact metrics to your project bullet points and build hands-on proof "
+        f"with {', '.join(gaps[:2])}."
+    )
+
+    resource_types = ["Hands-on Project", "Technical Course", "Official Docs", "Architecture Lab"]
+    learning_path = [
+        {
+            "topic": f"Build a production mini-service using {skill}",
+            "resource_type": resource_types[idx % len(resource_types)],
+            "estimated_hours": 6 + (idx * 2),
+        }
+        for idx, skill in enumerate(gaps[:4])
+    ]
+
+    api_key = os.getenv("GEMINI_API_KEY")
+    if api_key and resume_text:
+        try:
+            import google.generativeai as genai
+
+            genai.configure(api_key=api_key)
+            model_name = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+            model = genai.GenerativeModel(model_name)
+            prompt = (
+                "You are a senior technical recruiter reviewing an internship candidate.\n"
+                f"Target Role: {target_role} at {target_company}\n"
+                f"Candidate Skills: {', '.join(candidate_skills)}\n"
+                f"Missing Skills: {', '.join(gaps)}\n"
+                f"Resume Snippet:\n{resume_text[:1500]}\n\n"
+                "Return ONLY valid JSON with this exact schema:\n"
+                '{"resume_critique": "2-3 concise sentences of actionable recruiter feedback", '
+                '"learning_path": [{"topic": "specific actionable topic", '
+                '"resource_type": "Course|Project|Documentation|Workshop", "estimated_hours": 6}]}'
+            )
+            response = model.generate_content(prompt)
+            raw_json = (response.text or "").strip()
+            raw_json = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw_json, flags=re.MULTILINE).strip()
+            parsed = json.loads(raw_json)
+            if isinstance(parsed.get("resume_critique"), str) and parsed["resume_critique"].strip():
+                critique = parsed["resume_critique"].strip()
+            if isinstance(parsed.get("learning_path"), list) and parsed["learning_path"]:
+                cleaned_steps = []
+                for step in parsed["learning_path"][:4]:
+                    if isinstance(step, dict) and step.get("topic"):
+                        cleaned_steps.append(
+                            {
+                                "topic": str(step["topic"]),
+                                "resource_type": str(step.get("resource_type", "Hands-on Project")),
+                                "estimated_hours": int(step.get("estimated_hours", 6)),
+                            }
+                        )
+                if cleaned_steps:
+                    learning_path = cleaned_steps
+        except Exception as llm_err:
+            logger.warning("Gemini gap analysis fallback used: %s", llm_err)
+
+    return {
+        "resume_critique": critique,
+        "missing_skills": gaps,
+        "missing_required": gaps,
+        "skill_gaps": gaps,
+        "learning_path": learning_path,
     }
 
 
@@ -119,7 +217,7 @@ def health_check():
 @app.post("/api/v1/match")
 async def match_resume(file: UploadFile = File(...)):
     """
-    Accepts resume file uploads (PDF, PNG, JPG, WEBP), performs Gemini Multimodal extraction,
+    Accepts resume file uploads (PDF, PNG, JPG, WEBP), performs extraction,
     queries Qdrant vector search, and returns ranked candidate internship matches.
     """
     if not file.filename:
@@ -164,14 +262,15 @@ async def match_resume(file: UploadFile = File(...)):
             )
 
         candidate_profile = _extract_candidate_profile(resume_text, file.filename)
-        candidate_skills_lower = {s.lower() for s in candidate_profile["skills"]}
+        candidate_skills = candidate_profile["skills"]
+        candidate_skills_lower = {s.lower() for s in candidate_skills}
 
         # 2. Embed parsed resume text
         candidate_job = InternshipJobDescription(
             job_id="candidate_query",
             title="Candidate Resume",
             description=resume_text,
-            required_skills=candidate_profile["skills"],
+            required_skills=candidate_skills,
         )
 
         resume_vector = []
@@ -188,104 +287,165 @@ async def match_resume(file: UploadFile = File(...)):
                 for idx, hit in enumerate(raw_hits, start=1):
                     if isinstance(hit, dict):
                         payload = hit.get("payload", {}) or hit
-                        raw_score = hit.get("score", 0.85)
+                        raw_score = float(hit.get("score", 0.85))
                     else:
                         payload = getattr(hit, "payload", {}) or {}
-                        raw_score = getattr(hit, "score", 0.85)
+                        raw_score = float(getattr(hit, "score", 0.85))
 
-                    score = (
-                        round(float(raw_score) * 100, 1)
-                        if float(raw_score) <= 1.0
-                        else round(float(raw_score), 1)
+                    overall_pct = round(raw_score * 100, 1) if raw_score <= 1.0 else round(raw_score, 1)
+                    semantic_ratio = round(raw_score if raw_score <= 1.0 else raw_score / 100.0, 3)
+
+                    req_skills = payload.get("required_skills") or ["Python", "FastAPI", "Docker", "Qdrant"]
+                    pref_skills = payload.get("preferred_skills") or ["AWS", "React"]
+                    matched_req = [s for s in req_skills if s.lower() in candidate_skills_lower] or req_skills[:2]
+                    matched_pref = [s for s in pref_skills if s.lower() in candidate_skills_lower]
+                    missing_req = [s for s in req_skills if s.lower() not in candidate_skills_lower] or ["Docker"]
+                    missing_pref = [s for s in pref_skills if s.lower() not in candidate_skills_lower]
+
+                    title = payload.get("title", "AI / ML Systems Intern")
+                    company = payload.get("company", "Nectarline Core")
+                    location = payload.get("location", "Remote")
+                    stipend = payload.get("stipend", "₹40,000 / month")
+                    description = payload.get(
+                        "description",
+                        "Build and deploy scalable ML and backend services.",
                     )
-                    req_skills = payload.get("required_skills") or ["Python", "FastAPI", "Docker"]
-                    matched = [s for s in req_skills if s.lower() in candidate_skills_lower] or req_skills[:2]
-                    missing = [s for s in req_skills if s.lower() not in candidate_skills_lower] or ["Docker"]
+
+                    score_obj = {
+                        "overall_score": overall_pct,
+                        "semantic_similarity": semantic_ratio,
+                        "matched_required": matched_req,
+                        "matched_preferred": matched_pref,
+                        "missing_required": missing_req,
+                        "missing_preferred": missing_pref,
+                    }
+                    job_obj = {
+                        "job_id": payload.get("job_id", f"JOB-10{idx}"),
+                        "title": title,
+                        "company": company,
+                        "location": location,
+                        "stipend": stipend,
+                        "description": description,
+                        "required_skills": req_skills,
+                        "preferred_skills": pref_skills,
+                    }
 
                     matches.append(
                         {
-                            "job_id": payload.get("job_id", f"JOB-10{idx}"),
-                            "title": payload.get("title", "AI / ML Systems Intern"),
-                            "company": payload.get("company", "Nectarline Core"),
-                            "match_score": score,
-                            "score": score,
-                            "location": payload.get("location", "Remote"),
-                            "stipend": payload.get("stipend", "₹40,000 / month"),
-                            "description": payload.get(
-                                "description",
-                                "Build and deploy scalable ML and backend services.",
-                            ),
-                            "matching_skills": matched,
-                            "matched_skills": matched,
-                            "missing_skills": missing,
-                            "skill_gaps": missing,
+                            **job_obj,
+                            "match_score": overall_pct,
+                            "overall_score": overall_pct,
+                            "semantic_similarity": semantic_ratio,
+                            "matching_skills": matched_req + matched_pref,
+                            "matched_required": matched_req,
+                            "matched_preferred": matched_pref,
+                            "missing_skills": missing_req,
+                            "missing_required": missing_req,
+                            "missing_preferred": missing_pref,
+                            "score": score_obj,
+                            "job": job_obj,
+                            "internship": job_obj,
                         }
                     )
             except Exception as qdrant_err:
                 logger.warning("Qdrant search fallback: %s", qdrant_err)
 
-        # 4. Fallback structured response if Qdrant collection has no jobs yet
+        # 4. Fallback structured response if Qdrant collection is empty
         if not matches:
-            matches = [
-                {
-                    "job_id": "JOB-901",
-                    "title": "Multimodal AI Systems Intern",
-                    "company": "FET Tech Labs",
-                    "match_score": 94.2,
-                    "score": 94.2,
-                    "location": "Hybrid / Bengaluru",
-                    "stipend": "₹50,000 / month",
-                    "description": "Develop multimodal document pipelines with Gemini and Qdrant vector retrieval.",
-                    "matching_skills": candidate_profile["skills"][:4],
-                    "matched_skills": candidate_profile["skills"][:4],
-                    "missing_skills": ["ONNX Runtime", "Docker"],
-                    "skill_gaps": ["ONNX Runtime", "Docker"],
-                },
-                {
-                    "job_id": "JOB-902",
-                    "title": "Full-Stack Product & UI Engineer Intern",
-                    "company": "Nimblux Studio",
-                    "match_score": 88.6,
-                    "score": 88.6,
-                    "location": "Remote",
-                    "stipend": "₹45,000 / month",
-                    "description": "Craft interactive web applications and API integrations for modern AI tools.",
-                    "matching_skills": candidate_profile["skills"][:3],
-                    "matched_skills": candidate_profile["skills"][:3],
-                    "missing_skills": ["Design Systems", "TypeScript"],
-                    "skill_gaps": ["Design Systems", "TypeScript"],
-                },
-                {
-                    "job_id": "JOB-903",
-                    "title": "Backend & Vector Search Intern",
-                    "company": "Nectarline Labs",
-                    "match_score": 84.8,
-                    "score": 84.8,
-                    "location": "Remote",
-                    "stipend": "₹40,000 / month",
-                    "description": "Optimize FastAPI microservices and low-latency semantic search indexes.",
-                    "matching_skills": candidate_profile["skills"][:3],
-                    "matched_skills": candidate_profile["skills"][:3],
-                    "missing_skills": ["Kubernetes", "Redis"],
-                    "skill_gaps": ["Kubernetes", "Redis"],
-                },
+            fallback_specs = [
+                (
+                    "JOB-901",
+                    "Multimodal AI Systems Intern",
+                    "FET Tech Labs",
+                    94.2,
+                    "Hybrid / Bengaluru",
+                    "₹50,000 / month",
+                    "Develop multimodal document pipelines with Gemini and Qdrant vector retrieval.",
+                    ["Python", "FastAPI", "Qdrant", "ONNX Runtime", "Docker"],
+                    ["PyTorch", "AWS"],
+                ),
+                (
+                    "JOB-902",
+                    "Full-Stack Product & UI Engineer Intern",
+                    "Nimblux Studio",
+                    88.6,
+                    "Remote",
+                    "₹45,000 / month",
+                    "Craft interactive web applications and API integrations for modern AI tools.",
+                    ["React", "TypeScript", "JavaScript", "HTML5", "CSS"],
+                    ["Design Systems", "Figma"],
+                ),
+                (
+                    "JOB-903",
+                    "Backend & Vector Search Intern",
+                    "Nectarline Labs",
+                    84.8,
+                    "Remote",
+                    "₹40,000 / month",
+                    "Optimize FastAPI microservices and low-latency semantic search indexes.",
+                    ["Python", "FastAPI", "PostgreSQL", "Docker", "Redis"],
+                    ["Kubernetes", "Linux"],
+                ),
             ]
+            for j_id, title, company, pct, loc, stipend, desc, req, pref in fallback_specs:
+                matched_req = [s for s in req if s.lower() in candidate_skills_lower] or candidate_skills[:3]
+                matched_pref = [s for s in pref if s.lower() in candidate_skills_lower]
+                missing_req = [s for s in req if s.lower() not in candidate_skills_lower]
+                missing_pref = [s for s in pref if s.lower() not in candidate_skills_lower]
+                ratio = round(pct / 100.0, 3)
 
-        all_missing: List[str] = []
-        for m in matches:
-            for skill in m.get("missing_skills", []):
-                if skill not in all_missing:
-                    all_missing.append(skill)
+                score_obj = {
+                    "overall_score": pct,
+                    "semantic_similarity": ratio,
+                    "matched_required": matched_req,
+                    "matched_preferred": matched_pref,
+                    "missing_required": missing_req,
+                    "missing_preferred": missing_pref,
+                }
+                job_obj = {
+                    "job_id": j_id,
+                    "title": title,
+                    "company": company,
+                    "location": loc,
+                    "stipend": stipend,
+                    "description": desc,
+                    "required_skills": req,
+                    "preferred_skills": pref,
+                }
+                matches.append(
+                    {
+                        **job_obj,
+                        "match_score": pct,
+                        "overall_score": pct,
+                        "semantic_similarity": ratio,
+                        "matching_skills": matched_req + matched_pref,
+                        "matched_required": matched_req,
+                        "matched_preferred": matched_pref,
+                        "missing_skills": missing_req,
+                        "missing_required": missing_req,
+                        "missing_preferred": missing_pref,
+                        "score": score_obj,
+                        "job": job_obj,
+                        "internship": job_obj,
+                    }
+                )
 
-        remediation_roadmap = [
-            {
-                "step": idx + 1,
-                "skill": skill,
-                "duration": f"{6 + (idx * 2)} Hours",
-                "action": f"Complete a hands-on mini-project integrating {skill} into a FastAPI workflow.",
-            }
-            for idx, skill in enumerate(all_missing[:3])
-        ]
+        # 5. Build gap analysis and inline learning roadmap
+        top_match = matches[0]
+        aggregated_missing: List[str] = []
+        for skill in top_match.get("missing_required", []) + top_match.get("missing_preferred", []):
+            if skill not in aggregated_missing:
+                aggregated_missing.append(skill)
+
+        gap_analysis = _generate_gap_analysis(
+            resume_text=resume_text,
+            candidate_skills=candidate_skills,
+            top_match=top_match,
+            missing_skills=aggregated_missing,
+        )
+
+        # Attach gap_analysis to both root payload and top match so any lookup path succeeds
+        top_match["gap_analysis"] = gap_analysis
 
         return {
             "status": "success",
@@ -295,8 +455,9 @@ async def match_resume(file: UploadFile = File(...)):
             "total_matches": len(matches),
             "top_internships": matches,
             "matches": matches,
-            "remediation_roadmap": remediation_roadmap,
-            "learning_roadmap": remediation_roadmap,
+            "gap_analysis": gap_analysis,
+            "gapAnalysis": gap_analysis,
+            "remediation_roadmap": gap_analysis["learning_path"],
         }
 
     except HTTPException:
